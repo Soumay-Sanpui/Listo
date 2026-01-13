@@ -241,7 +241,7 @@ export default function App() {
           <div className="flex items-center p-1 bg-zinc-900/50 border border-zinc-800 rounded-2xl w-fit mx-auto sm:mx-0">
             <button
               onClick={() => setActiveTab('active')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'active' ? 'bg-accent-color text-black shadow-lg shadow-accent-color/20' : 'text-zinc-500 hover:text-white'}`}
+              className={`px-6 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'active' ? 'bg-accent-color text-black shadow-lg shadow-accent-color/20' : 'text-zinc-500 hover:text-white'}`}
             >
               Do It Now
               <span className={`text-[10px] px-2 py-0.5 rounded-lg ${activeTab === 'active' ? 'bg-black/10' : 'bg-zinc-800'}`}>
@@ -250,7 +250,7 @@ export default function App() {
             </button>
             <button
               onClick={() => setActiveTab('completed')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'completed' ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-zinc-500 hover:text-white'}`}
+              className={`px-6 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'completed' ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-zinc-500 hover:text-white'}`}
             >
               Done List
               <span className={`text-[10px] px-2 py-0.5 rounded-lg ${activeTab === 'completed' ? 'bg-black/10' : 'bg-zinc-800'}`}>
