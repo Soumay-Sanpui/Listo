@@ -9,7 +9,7 @@ import { AnalyticsModal } from './components/AnalyticsModal';
 import { DailyProgressModal } from './components/DailyProgressModal';
 import { ThemeModal } from './components/ThemeModal';
 import { AboutListoModal } from './components/AboutListoModal';
-import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette, AlertCircle } from 'lucide-react';
+import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette, AlertCircle, Github } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import type { Todo } from './types/todo';
@@ -155,7 +155,7 @@ export default function App() {
               onClick={() => setIsLimitModalOpen(false)}
               className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-zinc-200 transition-all active:scale-95 text-xs shadow-lg shadow-white/10"
             >
-              Okay, will finish the 5 first 
+              Okay, will finish the 5 first
             </button>
           </div>
         </div>
@@ -200,6 +200,21 @@ export default function App() {
         onClose={() => setIsAboutOpen(false)}
       />
 
+      <a
+        href="https://github.com/Soumay-Sanpui/Listo"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed top-4 right-4 z-[100] flex items-center gap-2 sm:gap-3 p-3 rounded-full bg-zinc-900/90 text-zinc-400 hover:text-white hover:scale-105 transition-all group"
+      >
+        <div className="p-1 sm:p-1.5 rounded-full transition-colors">
+          <Github size={18} className="sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform" />
+        </div>
+        <div className="hidden xs:flex flex-col items-start leading-none pr-1">
+          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-300">Star on GitHub</span>
+          <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter mt-1">Support the project ⭐️</span>
+        </div>
+      </a>
+
       <header className="mb-6 px-2">
         <div className="flex justify-between items-start border-b border-zinc-800 pb-4 relative">
           <div className="flex-1">
@@ -218,6 +233,7 @@ export default function App() {
               <Zap size={18} fill={percentage === 100 ? 'currentColor' : 'none'} className="group-hover:animate-pulse" />
               <span className="text-xs font-black">{percentage}%</span>
             </button>
+
 
             <button
               onClick={() => setIsCountdownOpen(true)}
