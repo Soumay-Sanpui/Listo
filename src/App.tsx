@@ -9,12 +9,12 @@ import { AnalyticsModal } from './components/AnalyticsModal';
 import { DailyProgressModal } from './components/DailyProgressModal';
 import { ThemeModal } from './components/ThemeModal';
 import { AboutListoModal } from './components/AboutListoModal';
-import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette } from 'lucide-react';
-import Confetti from 'react-confetti';
+import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette, AlertCircle } from 'lucide-react';
 import { useWindowSize } from 'react-use';
+import Confetti from 'react-confetti';
 import type { Todo } from './types/todo';
 
-const QUOTES = [
+const QUOTES: string[] = [
   "Focus on being productive instead of busy.",
   "Your future is created by what you do today, not tomorrow.",
   "Done is better than perfect.",
@@ -35,6 +35,16 @@ const QUOTES = [
   "Amateurs sit and wait for inspiration, the rest of us just get up and go to work.",
   "You don't have to see the whole staircase, just take the first step.",
   "Productivity is never an accident."
+];
+
+const LIMIT_MESSAGES = [
+  "Six tasks? Slow down, Superman. They're all vanishing at midnight anyway. Why waste the ink? 🦸‍♂️",
+  "Adding a 6th task is bold for someone who won't even finish the first 5 before the clock hits 12. 🕛",
+  "Five is the limit. Remember, everything you don't finish tonight gets deleted. Don't be a hoarder. 🗑️",
+  "A 6th task? In this economy? Stick to the 5 you'll lose in a few hours.",
+  "If you can't finish 5 before midnight, adding a 6th is just digital littering.",
+  "Your ambition is adorable, but the 'Now or Never' clock is ticking. 5 is plenty.",
+  "Focus on the 5 you have. At midnight, this list becomes a ghost town."
 ];
 
 export default function App() {
@@ -59,27 +69,28 @@ export default function App() {
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
+  const [limitMessage, setLimitMessage] = useState("");
   const [activeTab, setActiveTab] = useState<'active' | 'completed'>('active');
-  const [searchQuery, setSearchQuery] = useState('');
   const { width, height } = useWindowSize();
 
   const quote = useMemo(() => QUOTES[new Date().getDay() % QUOTES.length], []);
 
-  const filteredTodos = useMemo(() => {
-    if (!searchQuery.trim()) return todos;
-    const query = searchQuery.toLowerCase();
-    return todos.filter(t =>
-      t.text.toLowerCase().includes(query) ||
-      t.tags?.some(tag => tag.toLowerCase().includes(query))
-    );
-  }, [todos, searchQuery]);
-
-  const activeTodos = getSortedTodos(filteredTodos.filter(t => !t.completed));
-  const completedTodos = getSortedTodos(filteredTodos.filter(t => t.completed));
+  const activeTodos = getSortedTodos(todos.filter(t => !t.completed));
+  const completedTodos = getSortedTodos(todos.filter(t => t.completed));
 
   const totalToday = todos.length;
   const completedCount = todos.filter(t => t.completed).length;
   const percentage = totalToday === 0 ? 0 : Math.round((completedCount / totalToday) * 100);
+
+  const handleAddTodo = (text: string) => {
+    if (activeTodos.length >= 5) {
+      setLimitMessage(LIMIT_MESSAGES[Math.floor(Math.random() * LIMIT_MESSAGES.length)]);
+      setIsLimitModalOpen(true);
+      return;
+    }
+    addTodo(text);
+  };
 
   const handleComplete = (id: string) => {
     toggleTodo(id);
@@ -121,6 +132,35 @@ export default function App() {
           colors={['#06b6d4', '#4ade80', '#ffffff', '#fbbf24']}
         />
       )}
+
+      {/* Sarcastic Limit Modal */}
+      {isLimitModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-zinc-900 border-2 border-red-500/30 rounded-3xl max-w-sm w-full p-8 shadow-2xl text-center space-y-6 animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto text-red-500">
+              <AlertCircle size={32} />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-white uppercase tracking-tighter">Slow Down, Champ</h3>
+              <p className="text-zinc-400 text-md leading-relaxed font-medium">
+                {limitMessage}
+              </p>
+              <div className="pt-2">
+                <p className="text-xs text-red-500 font-semibold uppercase tracking-[0.2em] animate-pulse">
+                  Reminder: All tasks vanish at midnight
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsLimitModalOpen(false)}
+              className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-zinc-200 transition-all active:scale-95 text-xs shadow-lg shadow-white/10"
+            >
+              Okay, will finish the 5 first 
+            </button>
+          </div>
+        </div>
+      )}
+
       <FocusMode
         todo={focusedTodo}
         onClose={() => setFocusedTodo(null)}
@@ -148,8 +188,6 @@ export default function App() {
         onClose={() => setIsProgressOpen(false)}
         total={totalToday}
         completed={completedCount}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
       />
 
       <ThemeModal
@@ -175,7 +213,7 @@ export default function App() {
             <button
               onClick={() => setIsProgressOpen(true)}
               className="flex items-center gap-2 px-3 py-2 rounded-xl bg-accent-color/10 border border-accent-color/20 text-accent-color hover:bg-accent-color hover:text-white transition-all shadow-sm group"
-              title="Daily Progress & Search"
+              title="Daily Progress"
             >
               <Zap size={18} fill={percentage === 100 ? 'currentColor' : 'none'} className="group-hover:animate-pulse" />
               <span className="text-xs font-black">{percentage}%</span>
@@ -213,7 +251,7 @@ export default function App() {
             <button
               onClick={() => setIsThemeOpen(true)}
               className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-violet-400 hover:border-violet-400/50 transition-all shadow-sm"
-              title="Change Theme (Safe Mode)"
+              title="Change Theme"
             >
               <Palette size={22} />
             </button>
@@ -221,7 +259,7 @@ export default function App() {
             <button
               onClick={() => setIsHelpOpen(true)}
               className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-accent-color hover:border-accent-color/50 transition-all shadow-sm"
-              title="Help & Info"
+              title="Help"
             >
               <HelpCircle size={22} />
             </button>
@@ -235,7 +273,7 @@ export default function App() {
       </header>
 
       <main className="flex-1 space-y-12">
-        <AddTodo onAdd={addTodo} />
+        <AddTodo onAdd={handleAddTodo} />
 
         <div className="flex flex-col gap-8">
           <div className="flex items-center p-1 bg-zinc-900/50 border border-zinc-800 rounded-2xl w-fit mx-auto sm:mx-0">
@@ -273,7 +311,7 @@ export default function App() {
                   <button
                     onClick={clearCompleted}
                     className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-500 hover:border-red-500/50 transition-all shadow-sm flex items-center gap-2 group px-3"
-                    title="Clear all completed tasks"
+                    title="Clear all"
                   >
                     <Trash2 size={14} />
                     <span className="text-[10px] font-bold uppercase tracking-tighter hidden group-hover:inline">Clear All</span>
@@ -286,12 +324,12 @@ export default function App() {
                   <div className="text-center">
                     <p className="font-bold text-lg text-zinc-300">
                       {activeTab === 'active'
-                        ? (searchQuery ? "No matches found." : "The void is quiet.")
+                        ? "The void is quiet."
                         : "Nothing finished today."}
                     </p>
                     <p className="text-sm text-zinc-600">
                       {activeTab === 'active'
-                        ? (searchQuery ? "Try a different search." : "Add a task and get started.")
+                        ? "Add a task and get started."
                         : "Go crush some tasks!"}
                     </p>
                   </div>

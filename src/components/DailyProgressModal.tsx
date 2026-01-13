@@ -1,12 +1,10 @@
-import { Zap, Search, X as CloseIcon } from 'lucide-react';
+import { Zap, X as CloseIcon } from 'lucide-react';
 
 interface DailyProgressModalProps {
     isOpen: boolean;
     onClose: () => void;
     total: number;
     completed: number;
-    searchQuery: string;
-    onSearchChange: (value: string) => void;
 }
 
 export function DailyProgressModal({
@@ -14,8 +12,6 @@ export function DailyProgressModal({
     onClose,
     total,
     completed,
-    searchQuery,
-    onSearchChange
 }: DailyProgressModalProps) {
     if (!isOpen) return null;
 
@@ -51,27 +47,12 @@ export function DailyProgressModal({
                         <div className="text-[10px] uppercase tracking-[0.3em] text-text-muted font-bold">Completion Rate</div>
                     </div>
 
-                    <div className="space-y-4">
-                        <div className="relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-accent-color transition-colors" size={18} />
-                            <input
-                                type="text"
-                                autoFocus
-                                placeholder="Focus search on #tags or tasks..."
-                                value={searchQuery}
-                                onChange={(e) => onSearchChange(e.target.value)}
-                                className="w-full bg-bg-subtle border border-zinc-800 rounded-2xl py-4 pl-12 pr-12 text-sm focus:border-accent-color focus:ring-1 focus:ring-accent-color/30 transition-all outline-none"
-                            />
-                            {searchQuery && (
-                                <button
-                                    onClick={() => onSearchChange('')}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-white"
-                                >
-                                    <CloseIcon size={18} />
-                                </button>
-                            )}
-                        </div>
-                        <p className="text-[10px] text-center text-text-muted font-medium">Tip: Use search inside this flow to filter your dashboard</p>
+                    <div className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
+                        <p className="text-xs text-center text-zinc-500 leading-relaxed">
+                            Every task you complete brings you closer to your goals.
+                            <br />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-accent-color mt-2 block">Keep pushing.</span>
+                        </p>
                     </div>
                 </div>
 

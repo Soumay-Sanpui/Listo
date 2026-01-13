@@ -29,7 +29,6 @@ export function TodoList({
             <div className="flex items-center justify-between mb-6 px-2">
                 <h2 className="text-sm text-text-secondary uppercase tracking-widest flex items-center gap-2 font-medium">
                     {title}
-                    {todos.length > 0 && <span className="bg-bg-input text-text-primary text-xs px-2 py-0.5 rounded-xl font-bold">{todos.length}</span>}
                 </h2>
                 {headerActions}
             </div>

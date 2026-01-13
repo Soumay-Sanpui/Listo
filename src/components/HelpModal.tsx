@@ -136,7 +136,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                 </div>
 
                 <div className="p-6 bg-zinc-900/50 border-t border-zinc-800 text-center">
-                    <p className="text-xs text-text-muted">Built for flow. No distractions. No servers.</p>
+                    <p className="text-xs text-text-muted italic">Built for flow. Stay focused. Stay Listo.</p>
                 </div>
             </div>
         </div>
