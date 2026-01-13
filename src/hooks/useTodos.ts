@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import type { Todo } from '../types/todo';
 
-const STORAGE_KEY = 'todayist_todos';
+const STORAGE_KEY = 'listo_todos';
 
-const ACTIVITY_KEY = 'todayist_activity';
+const ACTIVITY_KEY = 'listo_activity';
 
 export function useTodos() {
     const [todos, setTodos] = useState<Todo[]>(() => {
@@ -124,7 +124,7 @@ export function useTodos() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `todayist-backup-${new Date().toISOString().split('T')[0]}.json`;
+        link.download = `listo-backup-${new Date().toISOString().split('T')[0]}.json`;
         link.click();
     };
 

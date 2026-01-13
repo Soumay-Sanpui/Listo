@@ -1,5 +1,6 @@
 import { Check, Trash2, Flame, CalendarArrowUp, Target } from 'lucide-react';
 import type { Todo } from '../types/todo';
+import { getTagStyles } from '../utils/tagUtils';
 
 interface TodoItemProps {
     todo: Todo;
@@ -32,7 +33,12 @@ export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority,
                     {todo.tags && todo.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-0.5">
                             {todo.tags.map(tag => (
-                                <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded-md bg-zinc-800 text-zinc-400 font-medium tracking-wide">#{tag}</span>
+                                <span
+                                    key={tag}
+                                    className={`text-[10px] px-1.5 py-0.5 rounded-md border font-bold tracking-wide transition-colors ${getTagStyles(tag)}`}
+                                >
+                                    #{tag}
+                                </span>
                             ))}
                         </div>
                     )}

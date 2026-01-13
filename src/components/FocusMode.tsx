@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Play, Pause, CheckCircle2, RotateCcw } from 'lucide-react';
 import type { Todo } from '../types/todo';
+import { getTagStyles } from '../utils/tagUtils';
 
 interface FocusModeProps {
     todo: Todo | null;
@@ -12,11 +13,17 @@ export function FocusMode({ todo, onClose, onComplete }: FocusModeProps) {
     const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes
     const [isActive, setIsActive] = useState(false);
     const [isBreak, setIsBreak] = useState(false);
+    const [hasStarted, setHasStarted] = useState(false);
+    const [showSarcasm, setShowSarcasm] = useState(false);
+    const [sarcasticMessage, setSarcasticMessage] = useState('');
+    const [exitAttempts, setExitAttempts] = useState(0);
 
     useEffect(() => {
         let interval: ReturnType<typeof setInterval>;
 
         if (isActive && timeLeft > 0) {
+            setHasStarted(true);
+            setExitAttempts(0); // Reset attempts if they actually start working
             interval = setInterval(() => {
                 setTimeLeft((time) => time - 1);
             }, 1000);
@@ -39,6 +46,52 @@ export function FocusMode({ todo, onClose, onComplete }: FocusModeProps) {
         setTimeLeft(isBreak ? 5 * 60 : 25 * 60);
     };
 
+    const handleClose = () => {
+        if (!hasStarted && !isBreak) {
+            const currentAttempts = exitAttempts + 1;
+            setExitAttempts(currentAttempts);
+
+            if (currentAttempts >= 2) {
+                alert("Fine, leave. I didn't want to help you focus anyway. 🙄");
+                onClose();
+                setHasStarted(false);
+                setExitAttempts(0);
+                return;
+            }
+
+            const sarcasticMessages = [
+                "Oh, just window shopping for productivity today?",
+                "Entering Focus Mode is the easy part. Actually working is the catch.",
+                "Shortest focus session in history. You must be very proud.",
+                "The 'Close' button is not a productivity hack, you know.",
+                "Practicing your clicking skills? Because you certainly aren't practicing focusing.",
+                "Going so soon? The timer hasn't even noticed you were here.",
+                "Wow, a whole zero seconds of focus. Impressive.",
+                "Is your attention span measured in milliseconds?",
+                "I'd call this a 'micro-break', but you haven't done anything yet.",
+                "Running away from your responsibilities? I'll wait.",
+                "Your to-do list is crying. Just thought you should know.",
+                "Distraction: 1, You: 0.",
+                "Maybe if you stare at the screen harder, the work will do itself?",
+                "I've seen goldfish with better commitment issues.",
+                "Oh, I'm sorry, was the silence too loud for you?",
+                "Don't let the door hit your productivity on the way out.",
+                "You're really good at starting things. Finishing? Not so much.",
+                "Is this your 'getting ready to get ready' phase?",
+                "I'm not mad, just disappointed. Okay, maybe a little mad.",
+                "The 'X' button doesn't make the work go away, unfortunately.",
+                "Focusing is hard. Scrolling is easy. I get it."
+            ];
+            const randomMessage = sarcasticMessages[Math.floor(Math.random() * sarcasticMessages.length)];
+            setSarcasticMessage(randomMessage);
+            setShowSarcasm(true);
+        } else {
+            onClose();
+            setHasStarted(false);
+            setExitAttempts(0);
+        }
+    };
+
     const handleComplete = () => {
         onComplete(todo.id);
         onClose();
@@ -52,9 +105,33 @@ export function FocusMode({ todo, onClose, onComplete }: FocusModeProps) {
 
     return (
         <div className="fixed inset-0 z-50 bg-bg-app/95 backdrop-blur-md flex flex-col items-center justify-center p-6 animate-in fade-in duration-300">
+            {showSarcasm && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-bg-card border border-zinc-800 p-8 rounded-[2rem] max-w-sm w-full text-center space-y-6 shadow-2xl animate-in zoom-in-95 duration-200">
+                        <div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <Pause size={32} />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-bold text-white italic">"Exiting already?"</h3>
+                            <p className="text-zinc-400 font-medium leading-relaxed">
+                                {sarcasticMessage}
+                            </p>
+                        </div>
+                        <div className="pt-2">
+                            <button
+                                onClick={() => setShowSarcasm(false)}
+                                className="w-full py-4 bg-accent-color text-black rounded-2xl font-bold hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg shadow-accent-color/20"
+                            >
+                                FINE, I'LL WORK...
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <button
-                onClick={onClose}
-                className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-text-secondary hover:text-white transition-colors"
+                onClick={handleClose}
+                className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 text-text-secondary hover:text-white transition-colors cursor-pointer"
             >
                 <X size={32} />
             </button>
@@ -64,13 +141,18 @@ export function FocusMode({ todo, onClose, onComplete }: FocusModeProps) {
                     <span className="inline-block px-4 py-1.5 rounded-full bg-accent-color/20 text-accent-color text-sm font-semibold tracking-wider uppercase">
                         {isBreak ? 'Break Time' : 'Focus Mode'}
                     </span>
-                    <h2 className="text-3xl sm:text-5xl font-bold leading-tight text-text-primary">
+                    <h2 className="text-2xl sm:text-4xl font-semibold leading-tight text-text-primary">
                         {todo.text}
                     </h2>
                     {todo.tags && todo.tags.length > 0 && (
                         <div className="flex justify-center gap-2">
                             {todo.tags.map(tag => (
-                                <span key={tag} className="text-zinc-500 text-sm">#{tag}</span>
+                                <span
+                                    key={tag}
+                                    className={`text-[12px] px-3 py-1 rounded-lg border font-bold tracking-wide transition-colors ${getTagStyles(tag)}`}
+                                >
+                                    #{tag}
+                                </span>
                             ))}
                         </div>
                     )}

@@ -65,6 +65,7 @@ export function CountdownModal({ isOpen, onClose }: CountdownModalProps) {
                 <div className="flex flex-col items-center gap-2">
                     <Clock className="text-red-500 animate-pulse" size={40} />
                     <h2 className="text-text-secondary uppercase tracking-[0.3em] font-bold text-sm">Destruction Imminent</h2>
+                    <p className='text-xs text-zinc-500'>Time until the end of the day! (will reset at midnight)</p>
                 </div>
 
                 <div className="flex flex-col gap-2">

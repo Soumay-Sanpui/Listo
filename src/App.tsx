@@ -8,6 +8,7 @@ import { CountdownModal } from './components/CountdownModal';
 import { AnalyticsModal } from './components/AnalyticsModal';
 import { DailyProgressModal } from './components/DailyProgressModal';
 import { ThemeModal } from './components/ThemeModal';
+import { AboutListoModal } from './components/AboutListoModal';
 import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette } from 'lucide-react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
@@ -57,6 +58,8 @@ export default function App() {
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'active' | 'completed'>('active');
   const [searchQuery, setSearchQuery] = useState('');
   const { width, height } = useWindowSize();
 
@@ -154,10 +157,15 @@ export default function App() {
         onClose={() => setIsThemeOpen(false)}
       />
 
+      <AboutListoModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+      />
+
       <header className="mb-6 px-2">
         <div className="flex justify-between items-start border-b border-zinc-800 pb-4 relative">
           <div className="flex-1">
-            <h1 className="text-3xl font-extrabold bg-gradient-to-br from-white to-zinc-500 bg-clip-text text-transparent tracking-tighter">Todayist</h1>
+            <h1 className="text-3xl font-extrabold bg-gradient-to-br from-white to-zinc-500 bg-clip-text text-transparent tracking-tighter">Listo</h1>
             <p className="text-xs text-text-secondary font-medium uppercase tracking-widest mt-1">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </p>
@@ -226,65 +234,100 @@ export default function App() {
         </div>
       </header>
 
-      <main className="flex-1 space-y-6">
+      <main className="flex-1 space-y-12">
         <AddTodo onAdd={addTodo} />
 
-        <div className="flex flex-col gap-10">
-          <TodoList
-            title={searchQuery ? "Search Results" : "Do It Now"}
-            todos={activeTodos}
-            onToggle={handleToggleWithSound}
-            onDelete={deleteTodo}
-            onExtend={toggleExtension}
-            onTogglePriority={togglePriority}
-            onEnterFocus={setFocusedTodo}
-            fallback={
-              <div className="flex flex-col items-center justify-center text-text-muted py-12 gap-4">
-                <Ghost size={40} className="opacity-50" />
-                <p>{searchQuery ? "No matches found." : "No tasks yet. Enjoy the void!"}</p>
-              </div>
-            }
-          />
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center p-1 bg-zinc-900/50 border border-zinc-800 rounded-2xl w-fit mx-auto sm:mx-0">
+            <button
+              onClick={() => setActiveTab('active')}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'active' ? 'bg-accent-color text-black shadow-lg shadow-accent-color/20' : 'text-zinc-500 hover:text-white'}`}
+            >
+              Do It Now
+              <span className={`text-[10px] px-2 py-0.5 rounded-lg ${activeTab === 'active' ? 'bg-black/10' : 'bg-zinc-800'}`}>
+                {activeTodos.length}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('completed')}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'completed' ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-zinc-500 hover:text-white'}`}
+            >
+              Done List
+              <span className={`text-[10px] px-2 py-0.5 rounded-lg ${activeTab === 'completed' ? 'bg-black/10' : 'bg-zinc-800'}`}>
+                {completedTodos.length}
+              </span>
+            </button>
+          </div>
 
-          {completedTodos.length > 0 && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <TodoList
-              title="Completed"
-              todos={completedTodos}
+              title=""
+              todos={activeTab === 'active' ? activeTodos : completedTodos}
               onToggle={handleToggleWithSound}
               onDelete={deleteTodo}
               onExtend={toggleExtension}
               onTogglePriority={togglePriority}
               onEnterFocus={setFocusedTodo}
               headerActions={
-                <button
-                  onClick={clearCompleted}
-                  className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-500 hover:border-red-500/50 transition-all shadow-sm flex items-center gap-2 group px-3"
-                  title="Clear all completed tasks"
-                >
-                  <Trash2 size={14} />
-                  <span className="text-[10px] font-bold uppercase tracking-tighter hidden group-hover:inline">Clear All</span>
-                </button>
+                activeTab === 'completed' && completedTodos.length > 0 ? (
+                  <button
+                    onClick={clearCompleted}
+                    className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-500 hover:border-red-500/50 transition-all shadow-sm flex items-center gap-2 group px-3"
+                    title="Clear all completed tasks"
+                  >
+                    <Trash2 size={14} />
+                    <span className="text-[10px] font-bold uppercase tracking-tighter hidden group-hover:inline">Clear All</span>
+                  </button>
+                ) : undefined
+              }
+              fallback={
+                <div className="flex flex-col items-center justify-center text-zinc-500 py-20 gap-4">
+                  <Ghost size={48} className="stroke-zinc-800 transition-all duration-700 hover:rotate-12 hover:scale-110" />
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-zinc-300">
+                      {activeTab === 'active'
+                        ? (searchQuery ? "No matches found." : "The void is quiet.")
+                        : "Nothing finished today."}
+                    </p>
+                    <p className="text-sm text-zinc-600">
+                      {activeTab === 'active'
+                        ? (searchQuery ? "Try a different search." : "Add a task and get started.")
+                        : "Go crush some tasks!"}
+                    </p>
+                  </div>
+                </div>
               }
             />
-          )}
+          </div>
         </div>
       </main>
 
-      <footer className="mt-20 pb-10 px-6 border-t border-zinc-900/50 text-center space-y-4 pt-10">
-        <div className="flex items-center justify-center gap-2 text-zinc-700">
-          <Ghost size={20} />
-          <p className="text-sm font-medium">Why are you even down here?</p>
-        </div>
-        <p className="text-xs text-zinc-600 max-w-xs mx-auto leading-relaxed">
-          There's nothing for you at the bottom. The work is at the top.
-          Stop looking for easter eggs and <span className="text-red-500/50">go finish your tasks</span> or I'll delete your progress myself.
-          (Not actually, but seriously, get back to work.)
-        </p>
-        <div className="pt-8 flex flex-col items-center gap-2">
-          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-black text-zinc-500">
-            MADE WITH <Heart size={10} className="text-red-500 fill-red-500 animate-bounce" /> AND FULL MOTIVATION
+      <footer className="mt-20 pb-10 px-6 border-t border-white/5 text-center space-y-6 pt-12">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center justify-center gap-2 text-zinc-400">
+            <Ghost size={20} className="text-zinc-500" />
+            <p className="text-sm font-bold tracking-tight">Why are you even down here?</p>
           </div>
-          <p className="text-[10px] text-zinc-800 font-mono tracking-tighter">v.2.0 // NO LIMITS // ZEN FLOW</p>
+          <p className="text-xs text-zinc-500 max-w-sm mx-auto leading-relaxed font-medium">
+            There's nothing for you at the bottom. The work is at the top.
+            Stop looking for easter eggs and <span className="text-red-500/80 font-bold">go finish your tasks</span> or I'll delete your progress myself.
+            (Not actually, but seriously, get back to work.)
+          </p>
+
+          <button
+            onClick={() => setIsAboutOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-accent-color rounded-full transition-all"
+          >
+            <HelpCircle size={12} />
+            What does Listo mean?
+          </button>
+        </div>
+
+        <div className="pt-8 flex flex-col items-center gap-3">
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-black text-zinc-600">
+            MADE WITH <Heart size={10} className="text-red-500 fill-red-500 animate-pulse" /> AND FULL MOTIVATION
+          </div>
+          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.0 // NO LIMITS // ZEN FLOW</p>
         </div>
       </footer>
     </div>

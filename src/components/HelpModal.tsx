@@ -16,7 +16,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                         <div className="w-10 h-10 rounded-xl bg-accent-color/10 text-accent-color flex items-center justify-center">
                             <Info size={24} />
                         </div>
-                        <h2 className="text-xl font-bold text-text-primary">How to use Todayist</h2>
+                        <h2 className="text-xl font-bold text-text-primary">How to use Listo</h2>
                     </div>
                     <button onClick={onClose} className="p-2 rounded-full hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors">
                         <X size={24} />
@@ -61,7 +61,26 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-sm font-semibold text-text-primary">Smart Tagging</p>
-                                    <p className="text-xs text-text-secondary leading-relaxed">Type <code className="bg-zinc-800 px-1 rounded text-accent-color">#work</code> or <code className="bg-zinc-800 px-1 rounded text-accent-color">#study</code> while adding a task to automatically categorize it.</p>
+                                    <p className="text-xs text-text-secondary leading-relaxed">
+                                        Type a <code className="bg-zinc-800 px-1 rounded text-accent-color font-bold">#tag</code> followed by a space. Listo will automatically "swallow" it and colorize it.
+                                    </p>
+                                    <div className="flex flex-wrap gap-1.5 pt-2">
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-cyan-400/10 text-cyan-400 border border-cyan-400/20 font-bold">#work</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-violet-400/10 text-violet-400 border border-violet-400/20 font-bold">#study</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-rose-400/10 text-rose-400 border border-rose-400/20 font-bold">#urgent</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 font-bold">#home</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-400/10 text-amber-400 border border-amber-400/20 font-bold">#personal</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-sky-400/10 text-sky-400 border border-sky-400/20 font-bold">#idea</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-orange-400/10 text-orange-400 border border-orange-400/20 font-bold">#gym</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-lime-400/10 text-lime-400 border border-lime-400/20 font-bold">#health</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-fuchsia-400/10 text-fuchsia-400 border border-fuchsia-400/20 font-bold">#shopping</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-indigo-400/10 text-indigo-400 border border-indigo-400/20 font-bold">#meet</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-400/10 text-blue-400 border border-blue-400/20 font-bold">#call</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 font-bold">#mail</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-pink-400/10 text-pink-400 border border-pink-400/20 font-bold">#ux</span>
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-red-400/10 text-red-400 border border-red-400/20 font-bold">#bug</span>
+                                    </div>
+                                    <p className="text-[10px] text-zinc-500 italic">...and any other tag will use a default sleek gray.</p>
                                 </div>
                             </div>
                             <div className="flex gap-4">
@@ -100,7 +119,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                         <div className="grid gap-4">
                             <div className="flex gap-4 border-l-2 border-accent-color/20 pl-4 py-2 bg-accent-color/5 rounded-r-xl text-accent-color">
                                 <p className="text-xs leading-relaxed italic">
-                                    "Todayist is built on the philosophy of 'Now or Never'. All tasks vanish at midnight unless you explicitly 'keep' them."
+                                    "Listo is built on the philosophy of 'Now or Never'. All tasks vanish at midnight unless you explicitly 'keep' them."
                                 </p>
                             </div>
                             <div className="flex gap-4">

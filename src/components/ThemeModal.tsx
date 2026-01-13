@@ -32,17 +32,17 @@ export function ThemeModal({ isOpen, onClose }: ThemeModalProps) {
                     </div>
 
                     <div className="space-y-3">
-                        <h2 className="text-xl font-extrabold text-white tracking-tight flex items-center justify-center gap-2">
+                        <h2 className="text-lg font-bold text-white tracking-tight flex items-center justify-center gap-2">
                             Aesthetic Correction <Sparkles size={18} className="text-amber-500" />
                         </h2>
-                        <p className="text-sm text-text-secondary leading-relaxed italic">
+                        <p className="text-md text-text-secondary leading-relaxed italic">
                             "{quote}"
                         </p>
                     </div>
 
                     <button
                         onClick={onClose}
-                        className="w-full py-4 bg-zinc-900 border border-zinc-800 hover:border-cyan-400/50 hover:bg-zinc-800 text-white rounded-2xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="cursor-pointer w-full py-4 bg-zinc-900 border border-zinc-800 hover:border-cyan-400/50 hover:bg-zinc-800 text-white rounded-2xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         Fine, I'll work.
                         <Ghost size={16} className="opacity-50" />
