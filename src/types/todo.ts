@@ -1,0 +1,10 @@
+export interface Todo {
+    id: string;
+    text: string;
+    completed: boolean;
+    priority: 'normal' | 'high';
+    tags: string[];
+    createdAt: number;
+    validUntil: number; // Timestamp for expiration
+    isExtended: boolean; // Tracking if it was extended to tomorrow
+}

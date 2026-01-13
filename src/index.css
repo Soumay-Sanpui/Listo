@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+    --color-bg-app: #09090b;
+    --color-bg-subtle: #121215;
+    --color-bg-card: #18181b;
+    --color-bg-card-hover: #27272a;
+    --color-bg-input: #27272a;
+
+    --color-text-primary: #f4f4f5;
+    --color-text-secondary: #a1a1aa;
+
+    --color-accent-color: #8b5cf6;
+    --color-accent-hover: #7c3aed;
+
+    --color-danger-color: #ef4444;
+    --color-success-color: #10b981;
+}
+
+/* Base styles are now handled by Tailwind's preflight mostly, 
+   but we can enforce some defaults */
+
+body {
+    @apply bg-bg-app text-text-primary font-sans antialiased min-h-screen flex justify-center pt-16 selection:bg-accent-color selection:text-white;
+}
+
+#root {
+    @apply w-full max-w-[600px] px-4;
+}
+
+/* Custom Checkbox for specific styling needs not easily met by utils alone, 
+   or just use utilities in component directly. 
+   I will move most component styles to the components themselves 
+   to fully embrace Tailwind. */
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-bg-app;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-bg-input rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-text-secondary;
+}
