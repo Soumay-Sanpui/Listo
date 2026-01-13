@@ -1,75 +1,84 @@
-# React + TypeScript + Vite
+# 👻 Listo: Focus on Now or Never
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-Currently, two official plugins are available:
+**Listo** is not just another todo app. It’s a minimalist, high-fidelity productivity engine built on the philosophy of **extreme focus**. While other apps encourage hoarding tasks you'll never do, Listo forces you to confront the reality of time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ⏳ The "Now or Never" Philosophy
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+In Listo, tomorrow doesn't exist. Every task in your list has an expiration date: **Midnight**.
+- If you don't finish it today, it's gone forever.
+- No backlog guilt. No infinite scrolling. Just today.
+- *Need to keep something?* You have to explicitly mark it for retrieval tomorrow, forcing a conscious decision on every item.
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+## 🔥 Key Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🚫 The "Extreme 5" Limit
+You can only have **5 active tasks** at a time. Trying to add a 6th task will trigger a sarcastic intervention from our productivity-shaming AI. 
+> *"Six tasks? Slow down, Superman. They're all vanishing at midnight anyway. Why waste the ink? 🦸‍♂️"*
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🧘 Zen Focus Mode
+Enter a terminal-like flow state for your tasks.
+- **Pomodoro Timer**: 25 minutes of uninterrupted work.
+- **Escape Proof**: Try to close Focus Mode early, and Listo will guilt-trip you into staying.
+- **Sarcasm Included**: If you managed to quit without starting, expect a dismissive comment.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 🏷️ Smart Tagging
+Listo features "Tag Swallowing". Type a `#tag` followed by a space, and the app will automatically extract it into a beautifully colorized pill. No extra clicks required.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 📊 Heatmap Analytics
+Track your productivity consistency with a 7-day activity heatmap. See your "Zen Flow" visualize over time.
+
+---
+
+## ✨ Design Aesthetics
+Built with a **Premium Dark Aesthetic**:
+- **Glassmorphism**: Subtle blurs and semi-transparent layers.
+- **Micro-animations**: Smooth transitions for every interaction.
+- **Custom Sound FX**: Satisfying pops and clicks for completion.
+- **Dynamic Quotes**: Daily motivation (or reality checks) to keep you grounded.
+
+---
+
+## 🥚 Easter Eggs & Quirks
+- **Bottom-Dweller Footer**: Scroll to the bottom and the app will call you out for procrastinating.
+- **The Guilt-Trip Modal**: A special high-fidelity modal that appears when you try to abandon a task in Focus Mode.
+- **Midnight Vanishing**: The sheer terror of watching your list reset at midnight.
+
+---
+
+## 🛠️ Quick Start
+
+```bash
+# Clone the repo
+git clone https://github.com/Soumay-Sanpui/Listo.git
+
+# Install dependencies
+npm install # or pnpm install
+
+# Run the dev server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📝 Technical Stack
+- **Framework**: Vite + React + TS
+- **Styling**: Tailwind CSS / Vanilla CSS
+- **Icons**: Lucide React
+- **Persistence**: LocalStorage (Zero backend, total privacy)
+- **Animations**: Framer Motion / Native CSS Transitions
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+<div align="center">
+  <p>Built for flow. Stay focused. Stay Listo.</p>
+  <sub>v2.0 // NO LIMITS // ZEN FLOW</sub>
+</div>
