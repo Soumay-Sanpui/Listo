@@ -71,8 +71,23 @@ export function AboutListoModal({ isOpen, onClose }: AboutListoModalProps) {
                                     </div>
                                 </div>
 
+                                <div className="space-y-3">
+                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-cyan-400">New in v2.0</h3>
+                                    <ul className="text-sm text-zinc-400 space-y-2 list-disc pl-4">
+                                        <li>
+                                            <span className="text-white font-semibold">Multiple Boards:</span> Create up to 5 boards to organize your chaos.
+                                        </li>
+                                        <li>
+                                            <span className="text-white font-semibold">No Limits:</span> The 5-task limit is gone. Add as many tasks as you want (at your own risk).
+                                        </li>
+                                        <li>
+                                            <span className="text-white font-semibold">Overtime Board:</span> A special board where tasks <span className="text-amber-500 font-bold">never expire</span>. Perfect for long-term goals or procrastination.
+                                        </li>
+                                    </ul>
+                                </div>
+
                                 <div className="space-y-2">
-                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-zinc-500">The Reason</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-zinc-500">The Reason for the Name</h3>
                                     <p className="text-zinc-400 text-sm leading-relaxed">
                                         Honestly? Every good "to-do" name on the web was already taken by some venture-backed startup.
                                         I couldn't find anything usable, so I went hunting in Spanish and found this absolute gem of a word.
