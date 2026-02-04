@@ -115,16 +115,36 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
 
                     <section className="space-y-4">
                         <h3 className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-2">
-                            <Zap size={14} className="text-amber-400" /> Analytics
+                            <Zap size={14} className="text-violet-400" /> Advanced Features
                         </h3>
                         <div className="grid gap-4">
                             <div className="flex gap-4">
-                                <div className="w-8 h-8 rounded-md bg-amber-400/10 text-amber-400 flex items-center justify-center shrink-0">
-                                    <Zap size={18} />
+                                <div className="w-8 h-8 rounded-md bg-cyan-400/10 text-cyan-400 flex items-center justify-center shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-sm font-semibold text-text-primary">Activity Tracking</p>
-                                    <p className="text-xs text-text-secondary leading-relaxed">The heatmap shows your daily completion count for the last 7 days. Consistency is key!</p>
+                                    <p className="text-sm font-semibold text-text-primary">Quick Stats</p>
+                                    <p className="text-xs text-text-secondary leading-relaxed">View productivity metrics, completion rates, and insights about your tasks at a glance.</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-4">
+                                <div className="w-8 h-8 rounded-md bg-violet-400/10 text-violet-400 flex items-center justify-center shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /></svg>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-semibold text-text-primary">Keyboard Shortcuts</p>
+                                    <p className="text-xs text-text-secondary leading-relaxed">
+                                        Press <code className="bg-zinc-800 px-1 rounded text-violet-400 font-bold">Ctrl + /</code> to see all available shortcuts for power users.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex gap-4">
+                                <div className="w-8 h-8 rounded-md bg-amber-400/10 text-amber-400 flex items-center justify-center shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></svg>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-semibold text-text-primary">Due Dates & Notes</p>
+                                    <p className="text-xs text-text-secondary leading-relaxed">Tasks show due date indicators and notes badges. Overdue tasks are highlighted in red.</p>
                                 </div>
                             </div>
                         </div>

@@ -72,19 +72,22 @@ export function AboutListoModal({ isOpen, onClose }: AboutListoModalProps) {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-cyan-400">New in v2.3</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-cyan-400">New in v2.4</h3>
                                     <ul className="text-sm text-zinc-400 space-y-2 list-disc pl-4">
                                         <li>
-                                            <span className="text-white font-semibold">Kanban Boards:</span> Visualize your workflow with drag-and-drop columns. Choose between List or Kanban when creating a board.
+                                            <span className="text-white font-semibold">Quick Stats:</span> View productivity metrics, completion rates, and task insights at a glance.
+                                        </li>
+                                        <li>
+                                            <span className="text-white font-semibold">Keyboard Shortcuts:</span> Power user shortcuts for quick navigation and actions (Ctrl+/).
+                                        </li>
+                                        <li>
+                                            <span className="text-white font-semibold">Due Dates & Notes:</span> Tasks now support due dates and detailed notes with visual indicators.
+                                        </li>
+                                        <li>
+                                            <span className="text-white font-semibold">Kanban Boards:</span> Visualize your workflow with drag-and-drop columns.
                                         </li>
                                         <li>
                                             <span className="text-white font-semibold">Multiple Boards:</span> Create up to 5 boards to organize your chaos.
-                                        </li>
-                                        <li>
-                                            <span className="text-white font-semibold">No Limits:</span> The 5-task limit is gone. Add as many tasks as you want (at your own risk).
-                                        </li>
-                                        <li>
-                                            <span className="text-white font-semibold">Overtime Board:</span> A special board where tasks <span className="text-amber-500 font-bold">never expire</span>. Perfect for long-term goals or procrastination.
                                         </li>
                                     </ul>
                                 </div>

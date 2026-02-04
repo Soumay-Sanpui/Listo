@@ -9,6 +9,8 @@ export interface Todo {
     isExtended: boolean; // Tracking if it was extended to tomorrow
     boardId: string;
     columnId?: 'todo' | 'in-progress' | 'done';
+    notes?: string; // Optional detailed notes
+    dueDate?: number; // Optional due date timestamp
 }
 
 export interface Board {

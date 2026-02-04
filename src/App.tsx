@@ -13,7 +13,9 @@ import { AboutListoModal } from './components/AboutListoModal';
 import { AddBoardModal } from './components/AddBoardModal';
 import { SettingsModal } from './components/SettingsModal';
 import { CalendarModal } from './components/CalendarModal';
-import { Ghost, HelpCircle, Trash2, Clock, BarChart3, Heart, Zap, AlertCircle, Github, Plus, X, Kanban, Layout } from 'lucide-react';
+import { QuickStatsModal } from './components/QuickStatsModal';
+import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
+import { Ghost, HelpCircle, Trash2, Clock, BarChart3, Heart, Zap, AlertCircle, Github, Plus, X, Kanban, Layout, TrendingUp } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import type { Todo } from './types/todo';
@@ -83,6 +85,8 @@ export default function App() {
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
   const [limitMessage, setLimitMessage] = useState("");
   const [isAddBoardOpen, setIsAddBoardOpen] = useState(false);
+  const [isQuickStatsOpen, setIsQuickStatsOpen] = useState(false);
+  const [isKeyboardShortcutsOpen, setIsKeyboardShortcutsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'active' | 'completed'>('active');
   const [activeBoardId, setActiveBoardId] = useState<string>('default');
   const { width, height } = useWindowSize();
@@ -96,6 +100,61 @@ export default function App() {
       if (boards[0]) setActiveBoardId(boards[0].id);
     }
   }, [boards, activeBoardId]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + K - Focus add task input
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        const input = document.querySelector('input[placeholder*="task"]') as HTMLInputElement;
+        input?.focus();
+      }
+      // Ctrl/Cmd + H - Open help
+      if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+        e.preventDefault();
+        setIsHelpOpen(true);
+      }
+      // Ctrl/Cmd + S - Open settings
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        setIsSettingsOpen(true);
+      }
+      // Ctrl/Cmd + B - New board
+      if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+        e.preventDefault();
+        handleAddBoardClick();
+      }
+      // Ctrl/Cmd + / - Keyboard shortcuts
+      if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+        e.preventDefault();
+        setIsKeyboardShortcutsOpen(true);
+      }
+      // Ctrl/Cmd + E - Export data
+      if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+        e.preventDefault();
+        exportData();
+      }
+      // Escape - Close modals
+      if (e.key === 'Escape') {
+        setIsHelpOpen(false);
+        setIsSettingsOpen(false);
+        setIsAddBoardOpen(false);
+        setIsQuickStatsOpen(false);
+        setIsKeyboardShortcutsOpen(false);
+        setIsCountdownOpen(false);
+        setIsAnalyticsOpen(false);
+        setIsProgressOpen(false);
+        setIsThemeOpen(false);
+        setIsAboutOpen(false);
+        setIsCalendarOpen(false);
+        setIsLimitModalOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [boards.length]);
 
   const currentBoard = boards.find(b => b.id === activeBoardId);
   const isKanbanBoard = currentBoard?.type === 'kanban';
@@ -265,6 +324,17 @@ export default function App() {
         onClose={() => setIsCalendarOpen(false)}
       />
 
+      <QuickStatsModal
+        isOpen={isQuickStatsOpen}
+        onClose={() => setIsQuickStatsOpen(false)}
+        todos={todos}
+      />
+
+      <KeyboardShortcutsModal
+        isOpen={isKeyboardShortcutsOpen}
+        onClose={() => setIsKeyboardShortcutsOpen(false)}
+      />
+
       <a
         href="https://github.com/Soumay-Sanpui/Listo"
         target="_blank"
@@ -299,6 +369,14 @@ export default function App() {
 
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-2 flex-wrap justify-end">
+              <button
+                onClick={() => setIsQuickStatsOpen(true)}
+                className="p-2 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-cyan-400 hover:border-cyan-400/50 transition-all shadow-sm"
+                title="Quick Stats"
+              >
+                <TrendingUp size={22} />
+              </button>
+
               <button
                 onClick={() => setIsProgressOpen(true)}
                 className="flex items-center gap-2 px-3 py-2 rounded-md bg-accent-color/10 border border-accent-color/20 text-accent-color hover:bg-accent-color hover:text-white transition-all shadow-sm group"
@@ -507,7 +585,7 @@ export default function App() {
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-black text-zinc-600">
             MADE WITH <Heart size={10} className="text-red-500 fill-red-500 animate-pulse" /> AND FULL MOTIVATION
           </div>
-          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.3 // KANBAN BOARDS // ZEN FLOW</p>
+          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.4 // PRODUCTIVITY UNLEASHED // ZEN FLOW</p>
         </div>
       </footer>
     </div>

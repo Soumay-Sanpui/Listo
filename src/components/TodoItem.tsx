@@ -1,4 +1,4 @@
-import { Check, Trash2, Flame, CalendarArrowUp, Target, MoreVertical } from 'lucide-react';
+import { Check, Trash2, Flame, CalendarArrowUp, Target, MoreVertical, FileText, Calendar } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import type { Todo } from '../types/todo';
 import { getTagStyles } from '../utils/tagUtils';
@@ -32,6 +32,20 @@ export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority,
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isMenuOpen]);
+
+    const formatDueDate = (timestamp: number) => {
+        const date = new Date(timestamp);
+        const today = new Date().setHours(0, 0, 0, 0);
+        const tomorrow = today + 86400000;
+        const dueDay = new Date(timestamp).setHours(0, 0, 0, 0);
+
+        if (dueDay === today) return 'Today';
+        if (dueDay === tomorrow) return 'Tomorrow';
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    };
+
+    const isDueToday = todo.dueDate && new Date(todo.dueDate).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
+    const isOverdue = todo.dueDate && todo.dueDate < Date.now() && !todo.completed;
 
     return (
         <div className={`group flex items-center justify-between bg-bg-card p-3 rounded-md border border-transparent hover:bg-bg-card-hover hover:border-zinc-800 transition-all ${todo.completed ? 'opacity-60' : ''}`}>
@@ -67,6 +81,21 @@ export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority,
                             })}
                         </div>
                     )}
+                    {/* Notes and Due Date Indicators */}
+                    <div className="flex items-center gap-2 mt-1">
+                        {todo.notes && todo.notes.trim() && (
+                            <div className="flex items-center gap-1 text-[10px] text-zinc-500">
+                                <FileText size={10} />
+                                <span>Notes</span>
+                            </div>
+                        )}
+                        {todo.dueDate && (
+                            <div className={`flex items-center gap-1 text-[10px] ${isOverdue ? 'text-red-400' : isDueToday ? 'text-amber-400' : 'text-zinc-500'}`}>
+                                <Calendar size={10} />
+                                <span>{formatDueDate(todo.dueDate)}</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
