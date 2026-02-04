@@ -19,7 +19,7 @@ export function DailyProgressModal({
 
     return (
         <div className="fixed inset-0 z-50 bg-bg-app/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-            <div className="bg-bg-card border border-zinc-800 rounded-3xl max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden">
+            <div className="bg-bg-card border border-zinc-800 rounded-md max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden">
                 <div className="relative h-2 bg-zinc-800">
                     <div
                         className="h-full bg-accent-color transition-all duration-1000 ease-out"
