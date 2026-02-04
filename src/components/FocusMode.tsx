@@ -120,7 +120,7 @@ export function FocusMode({ todo, onClose, onComplete }: FocusModeProps) {
                         <div className="pt-2">
                             <button
                                 onClick={() => setShowSarcasm(false)}
-                                className="w-full py-4 bg-accent-color text-black rounded-2xl font-bold hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg shadow-accent-color/20"
+                                className="w-full py-4 bg-accent-color text-black rounded-md font-bold hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shadow-lg shadow-accent-color/20"
                             >
                                 FINE, I'LL WORK...
                             </button>
@@ -149,7 +149,7 @@ export function FocusMode({ todo, onClose, onComplete }: FocusModeProps) {
                             {todo.tags.map(tag => (
                                 <span
                                     key={tag}
-                                    className={`text-[12px] px-3 py-1 rounded-lg border font-bold tracking-wide transition-colors ${getTagStyles(tag)}`}
+                                    className={`text-[12px] px-3 py-1 rounded-md border font-bold tracking-wide transition-colors ${getTagStyles(tag)}`}
                                 >
                                     #{tag}
                                 </span>
@@ -180,7 +180,7 @@ export function FocusMode({ todo, onClose, onComplete }: FocusModeProps) {
 
                 <button
                     onClick={handleComplete}
-                    className="group flex items-center justify-center gap-3 px-8 py-4 bg-success-color/10 text-success-color rounded-2xl hover:bg-success-color hover:text-white transition-all mx-auto mt-8"
+                    className="group flex items-center justify-center gap-3 px-8 py-4 bg-success-color/10 text-success-color rounded-md hover:bg-success-color hover:text-white transition-all mx-auto mt-8"
                 >
                     <CheckCircle2 size={24} />
                     <span className="font-semibold text-lg">Mark as Complete</span>

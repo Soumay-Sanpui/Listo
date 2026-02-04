@@ -25,9 +25,9 @@ export function ThemeModal({ isOpen, onClose }: ThemeModalProps) {
 
     return (
         <div className="fixed inset-0 z-[70] bg-bg-app/80 backdrop-blur-xl flex items-center justify-center p-4 animate-in fade-in duration-200">
-            <div className="bg-bg-card border border-zinc-800 rounded-3xl max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden">
+            <div className="bg-bg-card border border-zinc-800 rounded-md max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden">
                 <div className="p-8 flex flex-col items-center text-center space-y-6">
-                    <div className="w-16 h-16 rounded-2xl bg-cyan-400/10 text-cyan-400 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-md bg-cyan-400/10 text-cyan-400 flex items-center justify-center">
                         <Palette size={32} />
                     </div>
 
@@ -42,7 +42,7 @@ export function ThemeModal({ isOpen, onClose }: ThemeModalProps) {
 
                     <button
                         onClick={onClose}
-                        className="cursor-pointer w-full py-4 bg-zinc-900 border border-zinc-800 hover:border-cyan-400/50 hover:bg-zinc-800 text-white rounded-2xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="cursor-pointer w-full py-4 bg-zinc-900 border border-zinc-800 hover:border-cyan-400/50 hover:bg-zinc-800 text-white rounded-md font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         Fine, I'll work.
                         <Ghost size={16} className="opacity-50" />

@@ -1,4 +1,4 @@
-import { X, Settings, Volume2, Sparkles, Quote, Trash2, Github, Info } from 'lucide-react';
+import { X, Settings, Volume2, Sparkles, Quote, Trash2, Github, Info, Download, Upload, Palette } from 'lucide-react';
 import type { AppSettings } from '../hooks/useTodos';
 
 interface SettingsModalProps {
@@ -7,9 +7,21 @@ interface SettingsModalProps {
     settings: AppSettings;
     onUpdateSettings: (newSettings: Partial<AppSettings>) => void;
     onClearData: () => void;
+    onExportData: () => void;
+    onImportData: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onOpenTheme: () => void;
 }
 
-export function SettingsModal({ isOpen, onClose, settings, onUpdateSettings, onClearData }: SettingsModalProps) {
+export function SettingsModal({
+    isOpen,
+    onClose,
+    settings,
+    onUpdateSettings,
+    onClearData,
+    onExportData,
+    onImportData,
+    onOpenTheme
+}: SettingsModalProps) {
     if (!isOpen) return null;
 
     const handleToggle = (key: keyof AppSettings) => {
@@ -27,12 +39,12 @@ export function SettingsModal({ isOpen, onClose, settings, onUpdateSettings, onC
 
     return (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-[32px] max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl relative animate-in slide-in-from-bottom-4 duration-300">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-md max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl relative animate-in slide-in-from-bottom-4 duration-300">
 
                 {/* Header */}
                 <div className="sticky top-0 bg-zinc-900/90 backdrop-blur-md p-6 border-b border-zinc-800 z-10 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-zinc-800 flex items-center justify-center text-zinc-400">
+                        <div className="w-10 h-10 rounded-md bg-zinc-800 flex items-center justify-center text-zinc-400">
                             <Settings size={20} />
                         </div>
                         <div>
@@ -58,10 +70,10 @@ export function SettingsModal({ isOpen, onClose, settings, onUpdateSettings, onC
                             {/* Sound Toggle */}
                             <button
                                 onClick={() => handleToggle('soundEnabled')}
-                                className="w-full flex items-center justify-between p-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800/50 border border-zinc-800 transition-all group"
+                                className="w-full flex items-center justify-between p-4 rounded-md bg-zinc-900 hover:bg-zinc-800/50 border border-zinc-800 transition-all group"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className={`p-2 rounded-xl transition-colors ${settings.soundEnabled ? 'bg-cyan-500/10 text-cyan-500' : 'bg-zinc-800 text-zinc-500'}`}>
+                                    <div className={`p-2 rounded-md transition-colors ${settings.soundEnabled ? 'bg-cyan-500/10 text-cyan-500' : 'bg-zinc-800 text-zinc-500'}`}>
                                         <Volume2 size={18} />
                                     </div>
                                     <div className="text-left">
@@ -77,10 +89,10 @@ export function SettingsModal({ isOpen, onClose, settings, onUpdateSettings, onC
                             {/* Confetti Toggle */}
                             <button
                                 onClick={() => handleToggle('confettiEnabled')}
-                                className="w-full flex items-center justify-between p-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800/50 border border-zinc-800 transition-all group"
+                                className="w-full flex items-center justify-between p-4 rounded-md bg-zinc-900 hover:bg-zinc-800/50 border border-zinc-800 transition-all group"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className={`p-2 rounded-xl transition-colors ${settings.confettiEnabled ? 'bg-amber-500/10 text-amber-500' : 'bg-zinc-800 text-zinc-500'}`}>
+                                    <div className={`p-2 rounded-md transition-colors ${settings.confettiEnabled ? 'bg-amber-500/10 text-amber-500' : 'bg-zinc-800 text-zinc-500'}`}>
                                         <Sparkles size={18} />
                                     </div>
                                     <div className="text-left">
@@ -96,10 +108,10 @@ export function SettingsModal({ isOpen, onClose, settings, onUpdateSettings, onC
                             {/* Quotes Toggle */}
                             <button
                                 onClick={() => handleToggle('showQuotes')}
-                                className="w-full flex items-center justify-between p-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800/50 border border-zinc-800 transition-all group"
+                                className="w-full flex items-center justify-between p-4 rounded-md bg-zinc-900 hover:bg-zinc-800/50 border border-zinc-800 transition-all group"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className={`p-2 rounded-xl transition-colors ${settings.showQuotes ? 'bg-violet-500/10 text-violet-500' : 'bg-zinc-800 text-zinc-500'}`}>
+                                    <div className={`p-2 rounded-md transition-colors ${settings.showQuotes ? 'bg-violet-500/10 text-violet-500' : 'bg-zinc-800 text-zinc-500'}`}>
                                         <Quote size={18} />
                                     </div>
                                     <div className="text-left">
@@ -114,15 +126,60 @@ export function SettingsModal({ isOpen, onClose, settings, onUpdateSettings, onC
                         </div>
                     </div>
 
+                    {/* Data & Look Group */}
+                    <div className="space-y-4">
+                        <h3 className="text-xs font-bold text-zinc-600 uppercase tracking-widest px-1">Data & Look</h3>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            {/* Backup Data */}
+                            <button
+                                onClick={onExportData}
+                                className="flex flex-col items-center justify-center p-4 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all gap-2 group"
+                            >
+                                <div className="p-2 rounded-md bg-emerald-500/10 text-emerald-500 group-hover:scale-110 transition-transform">
+                                    <Download size={20} />
+                                </div>
+                                <span className="text-xs font-bold text-zinc-400 group-hover:text-white">Backup Data</span>
+                            </button>
+
+                            {/* Restore Data */}
+                            <label
+                                className="flex flex-col items-center justify-center p-4 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all gap-2 group cursor-pointer"
+                            >
+                                <div className="p-2 rounded-md bg-blue-500/10 text-blue-500 group-hover:scale-110 transition-transform">
+                                    <Upload size={20} />
+                                </div>
+                                <span className="text-xs font-bold text-zinc-400 group-hover:text-white">Restore Data</span>
+                                <input type="file" accept=".json" className="hidden" onChange={onImportData} />
+                            </label>
+
+                            {/* Theme */}
+                            <button
+                                onClick={onOpenTheme}
+                                className="col-span-2 flex items-center justify-between p-4 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all group"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 rounded-md bg-fuchsia-500/10 text-fuchsia-500 group-hover:scale-110 transition-transform">
+                                        <Palette size={20} />
+                                    </div>
+                                    <div className="text-left">
+                                        <span className="text-sm font-bold text-zinc-400 group-hover:text-white block">Theme Settings</span>
+                                        <span className="text-xs text-zinc-600 block">Dark mode is life</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
                     {/* Danger Zone */}
                     <div className="space-y-4">
                         <h3 className="text-xs font-bold text-red-500 uppercase tracking-widest px-1">Danger Zone</h3>
                         <button
                             onClick={handleClearData}
-                            className="w-full flex items-center justify-between p-4 rounded-2xl bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 transition-all group"
+                            className="w-full flex items-center justify-between p-4 rounded-md bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/30 transition-all group"
                         >
                             <div className="flex items-center gap-4">
-                                <div className="p-2 rounded-xl bg-red-500/10 text-red-500">
+                                <div className="p-2 rounded-md bg-red-500/10 text-red-500">
                                     <Trash2 size={18} />
                                 </div>
                                 <div className="text-left">

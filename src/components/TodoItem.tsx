@@ -33,7 +33,7 @@ export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority,
     }, [isMenuOpen]);
 
     return (
-        <div className={`group flex items-center justify-between bg-bg-card p-3 rounded-xl border border-transparent hover:bg-bg-card-hover hover:border-zinc-800 transition-all ${todo.completed ? 'opacity-60' : ''}`}>
+        <div className={`group flex items-center justify-between bg-bg-card p-3 rounded-md border border-transparent hover:bg-bg-card-hover hover:border-zinc-800 transition-all ${todo.completed ? 'opacity-60' : ''}`}>
             <div className="flex items-center gap-3 flex-1 min-w-0">
                 <button
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200
@@ -68,13 +68,13 @@ export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority,
             <div className="relative shrink-0 ml-4" ref={menuRef}>
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className={`p-1.5 rounded-lg transition-all ${isMenuOpen ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-800/50'}`}
+                    className={`p-1.5 rounded-md transition-all ${isMenuOpen ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-white hover:bg-zinc-800/50'}`}
                 >
                     <MoreVertical size={18} />
                 </button>
 
                 {isMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 rounded-xl shadow-2xl z-30 py-1.5 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 rounded-md shadow-2xl z-30 py-1.5 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
                         {!todo.completed && (
                             <button
                                 onClick={() => {

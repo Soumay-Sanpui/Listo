@@ -32,7 +32,7 @@ export function AddBoardModal({ isOpen, onClose, onAdd }: AddBoardModalProps) {
                 </button>
 
                 <div className="mb-6 flex flex-col items-center text-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-indigo-400">
+                    <div className="w-12 h-12 rounded-md bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-indigo-400">
                         <Plus size={24} />
                     </div>
                     <div>
@@ -51,7 +51,7 @@ export function AddBoardModal({ isOpen, onClose, onAdd }: AddBoardModalProps) {
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="e.g., Work, Side Project, World Domination..."
                             maxLength={20}
-                            className="w-full bg-zinc-950/50 border border-zinc-800 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-zinc-600 font-medium"
+                            className="w-full bg-zinc-950/50 border border-zinc-800 text-white px-4 py-3 rounded-md focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-zinc-600 font-medium"
                         />
                         <div className="flex justify-between px-1">
                             <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-bold">Max 20 chars</span>
@@ -64,7 +64,7 @@ export function AddBoardModal({ isOpen, onClose, onAdd }: AddBoardModalProps) {
                     <button
                         type="submit"
                         disabled={!title.trim()}
-                        className="w-full py-3.5 bg-white text-black rounded-xl font-bold uppercase tracking-wider text-sm hover:bg-zinc-200 disabled:opacity-50 disabled:hover:bg-white transition-all active:scale-[0.98] shadow-lg shadow-white/5 flex items-center justify-center gap-2"
+                        className="w-full py-3.5 bg-white text-black rounded-md font-bold uppercase tracking-wider text-sm hover:bg-zinc-200 disabled:opacity-50 disabled:hover:bg-white transition-all active:scale-[0.98] shadow-lg shadow-white/5 flex items-center justify-center gap-2"
                     >
                         <Sparkles size={16} className={title.trim() ? "text-indigo-600" : "text-zinc-400"} />
                         Create Board

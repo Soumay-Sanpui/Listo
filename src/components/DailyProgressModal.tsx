@@ -47,7 +47,7 @@ export function DailyProgressModal({
                         <div className="text-[10px] uppercase tracking-[0.3em] text-text-muted font-bold">Completion Rate</div>
                     </div>
 
-                    <div className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
+                    <div className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-md">
                         <p className="text-xs text-center text-zinc-500 leading-relaxed">
                             Every task you complete brings you closer to your goals.
                             <br />

@@ -11,7 +11,7 @@ import { ThemeModal } from './components/ThemeModal';
 import { AboutListoModal } from './components/AboutListoModal';
 import { AddBoardModal } from './components/AddBoardModal';
 import { SettingsModal } from './components/SettingsModal';
-import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette, AlertCircle, Github, Layout, Plus, X } from 'lucide-react';
+import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, AlertCircle, Github, Layout, Plus, X } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import type { Todo } from './types/todo';
@@ -178,7 +178,7 @@ export default function App() {
       {/* Limit Modal */}
       {isLimitModalOpen && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="bg-zinc-900 border-2 border-red-500/30 rounded-3xl max-w-sm w-full p-8 shadow-2xl text-center space-y-6 animate-in zoom-in-95 duration-200">
+          <div className="bg-zinc-900 border-2 border-red-500/30 rounded-md max-w-sm w-full p-8 shadow-2xl text-center space-y-6 animate-in zoom-in-95 duration-200">
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto text-red-500">
               <AlertCircle size={32} />
             </div>
@@ -190,7 +190,7 @@ export default function App() {
             </div>
             <button
               onClick={() => setIsLimitModalOpen(false)}
-              className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-zinc-200 transition-all active:scale-95 text-xs shadow-lg shadow-white/10"
+              className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-md hover:bg-zinc-200 transition-all active:scale-95 text-xs shadow-lg shadow-white/10"
             >
               Okay, I understand
             </button>
@@ -210,6 +210,9 @@ export default function App() {
         settings={settings}
         onUpdateSettings={updateSettings}
         onClearData={clearAllData}
+        onExportData={exportData}
+        onImportData={handleImport}
+        onOpenTheme={() => setIsThemeOpen(true)}
       />
 
       <FocusMode
@@ -267,7 +270,7 @@ export default function App() {
       </a>
 
       <header className="mb-6 px-2">
-        <div className="flex justify-between items-start border-b border-zinc-800 pb-4 relative">
+        <div className="flex justify-between items-start border-b border-zinc-800 pb-2 relative">
           <div className="flex-1">
             <h1
               onClick={() => setIsSettingsOpen(true)}
@@ -280,73 +283,56 @@ export default function App() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap justify-end">
-            <button
-              onClick={() => setIsProgressOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-accent-color/10 border border-accent-color/20 text-accent-color hover:bg-accent-color hover:text-white transition-all shadow-sm group"
-              title="Daily Progress"
-            >
-              <Zap size={18} fill={percentage === 100 ? 'currentColor' : 'none'} className="group-hover:animate-pulse" />
-              <span className="text-xs font-black">{percentage}%</span>
-            </button>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2 flex-wrap justify-end">
+              <button
+                onClick={() => setIsProgressOpen(true)}
+                className="flex items-center gap-2 px-3 py-2 rounded-md bg-accent-color/10 border border-accent-color/20 text-accent-color hover:bg-accent-color hover:text-white transition-all shadow-sm group"
+                title="Daily Progress"
+              >
+                <Zap size={18} fill={percentage === 100 ? 'currentColor' : 'none'} className="group-hover:animate-pulse" />
+                <span className="text-xs font-black">{percentage}%</span>
+              </button>
 
 
-            <button
-              onClick={() => setIsCountdownOpen(true)}
-              className="p-2 rounded-xl bg-red-950/20 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
-              title="Time Remaining"
-            >
-              <Clock size={22} />
-            </button>
+              <button
+                onClick={() => setIsCountdownOpen(true)}
+                className="p-2 rounded-md bg-red-950/20 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                title="Time Remaining"
+              >
+                <Clock size={22} />
+              </button>
 
-            <button
-              onClick={() => setIsAnalyticsOpen(true)}
-              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-cyan-400 hover:border-cyan-400/50 transition-all shadow-sm"
-              title="Statistics"
-            >
-              <BarChart3 size={22} />
-            </button>
+              <button
+                onClick={() => setIsAnalyticsOpen(true)}
+                className="p-2 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-cyan-400 hover:border-cyan-400/50 transition-all shadow-sm"
+                title="Statistics"
+              >
+                <BarChart3 size={22} />
+              </button>
 
-            <button
-              onClick={exportData}
-              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-success-color hover:border-success-color/50 transition-all shadow-sm"
-              title="Backup Data"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="3" y2="15" /></svg>
-            </button>
+              <button
+                onClick={() => setIsHelpOpen(true)}
+                className="p-2 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-accent-color hover:border-accent-color/50 transition-all shadow-sm"
+                title="Help"
+              >
+                <HelpCircle size={22} />
+              </button>
+            </div>
 
-            <label className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-cyan-400 hover:border-cyan-400/50 transition-all shadow-sm cursor-pointer" title="Restore Data">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" /></svg>
-              <input type="file" accept=".json" className="hidden" onChange={handleImport} />
-            </label>
-
-            <button
-              onClick={() => setIsThemeOpen(true)}
-              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-violet-400 hover:border-violet-400/50 transition-all shadow-sm"
-              title="Change Theme"
-            >
-              <Palette size={22} />
-            </button>
-
-            <button
-              onClick={() => setIsHelpOpen(true)}
-              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-accent-color hover:border-accent-color/50 transition-all shadow-sm"
-              title="Help"
-            >
-              <HelpCircle size={22} />
-            </button>
+            {settings.showQuotes && (
+              <div className="flex items-center gap-2 text-zinc-500 overflow-hidden whitespace-nowrap justify-end pr-1 transition-all duration-300">
+                <Sparkles size={12} className="text-amber-500 shrink-0" />
+                <p className="text-[10px] italic truncate animate-in slide-in-from-right-2 duration-700 max-w-[200px] sm:max-w-none text-right">{quote}</p>
+              </div>
+            )}
           </div>
         </div>
 
-        {settings.showQuotes && (
-          <div className="mt-4 flex items-center gap-2 text-zinc-500 overflow-hidden whitespace-nowrap">
-            <Sparkles size={14} className="text-amber-500 shrink-0" />
-            <p className="text-xs italic truncate animate-in slide-in-from-left-2 duration-700">{quote}</p>
-          </div>
-        )}
+
       </header>
 
-      <main className="flex-1 space-y-8">
+      <main className="flex-1 space-y-2">
         {/* Boards Section */}
         <div className="px-4 pb-0 overflow-x-auto no-scrollbar">
           <div className="flex items-center gap-2 w-max mx-auto">
@@ -354,9 +340,9 @@ export default function App() {
               <div
                 key={board.id}
                 onClick={() => setActiveBoardId(board.id)}
-                className={`group relative px-3 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${activeBoardId === board.id
-                    ? 'text-white'
-                    : 'text-zinc-600 hover:text-zinc-400'
+                className={`group relative px-3 py-2 rounded-md transition-all cursor-pointer flex items-center gap-2 ${activeBoardId === board.id
+                  ? 'text-white'
+                  : 'text-zinc-600 hover:text-zinc-400'
                   }`}
               >
                 <Layout size={14} className={activeBoardId === board.id ? 'text-zinc-200' : 'text-zinc-700'} />
@@ -391,70 +377,70 @@ export default function App() {
           </div>
         </div>
 
-        <AddTodo onAdd={handleAddTodo} />
+        <div className="flex flex-col gap-2">
+          <AddTodo onAdd={handleAddTodo} />
 
-        <div className="flex flex-col gap-8">
-          <div className="flex items-center p-1 bg-zinc-900/50 border border-zinc-800 rounded-2xl w-fit mx-auto sm:mx-0">
+          <div className="flex items-center p-1 w-fit mx-auto sm:mx-0">
             <button
               onClick={() => setActiveTab('active')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'active' ? 'bg-accent-color text-black shadow-lg shadow-accent-color/20' : 'text-zinc-500 hover:text-white'}`}
+              className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'active' ? 'bg-accent-color text-black shadow-lg shadow-accent-color/20' : 'text-zinc-500 hover:text-white'}`}
             >
               Do It Now
-              <span className={`text-[10px] px-2 py-0.5 rounded-lg ${activeTab === 'active' ? 'bg-black/10' : 'bg-zinc-800'}`}>
+              <span className={`text-[10px] px-2 py-0.5 rounded-md ${activeTab === 'active' ? 'bg-black/10' : 'bg-zinc-800'}`}>
                 {activeTodos.length}
               </span>
             </button>
             <button
               onClick={() => setActiveTab('completed')}
-              className={`px-6 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'completed' ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-zinc-500 hover:text-white'}`}
+              className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'completed' ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-zinc-500 hover:text-white'}`}
             >
               Done List
-              <span className={`text-[10px] px-2 py-0.5 rounded-lg ${activeTab === 'completed' ? 'bg-black/10' : 'bg-zinc-800'}`}>
+              <span className={`text-[10px] px-2 py-0.5 rounded-md ${activeTab === 'completed' ? 'bg-black/10' : 'bg-zinc-800'}`}>
                 {completedTodos.length}
               </span>
             </button>
           </div>
+        </div>
 
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <TodoList
-              title=""
-              todos={activeTab === 'active' ? activeTodos : completedTodos}
-              onToggle={handleToggleWithSound}
-              onDelete={deleteTodo}
-              onExtend={toggleExtension}
-              onTogglePriority={togglePriority}
-              onEnterFocus={setFocusedTodo}
-              headerActions={
-                activeTab === 'completed' && completedTodos.length > 0 ? (
-                  <button
-                    onClick={clearCompleted}
-                    className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-500 hover:border-red-500/50 transition-all shadow-sm flex items-center gap-2 group px-3"
-                    title="Clear all"
-                  >
-                    <Trash2 size={14} />
-                    <span className="text-[10px] font-bold uppercase tracking-tighter hidden group-hover:inline">Clear All</span>
-                  </button>
-                ) : undefined
-              }
-              fallback={
-                <div className="flex flex-col items-center justify-center text-zinc-500 py-20 gap-4">
-                  <Ghost size={48} className="stroke-zinc-800 transition-all duration-700 hover:rotate-12 hover:scale-110" />
-                  <div className="text-center">
-                    <p className="font-bold text-lg text-zinc-300">
-                      {activeTab === 'active'
-                        ? "The void is quiet."
-                        : "Nothing finished today."}
-                    </p>
-                    <p className="text-sm text-zinc-600">
-                      {activeTab === 'active'
-                        ? "Add a task and get started."
-                        : "Go crush some tasks!"}
-                    </p>
-                  </div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <TodoList
+            title=""
+            todos={activeTab === 'active' ? activeTodos : completedTodos}
+            onToggle={handleToggleWithSound}
+            onDelete={deleteTodo}
+            onExtend={toggleExtension}
+            onTogglePriority={togglePriority}
+            onEnterFocus={setFocusedTodo}
+            headerActions={
+              activeTab === 'completed' && completedTodos.length > 0 ? (
+                <button
+                  onClick={clearCompleted}
+                  className="p-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-500 hover:border-red-500/50 transition-all shadow-sm flex items-center gap-2 group px-3"
+                  title="Clear all"
+                >
+                  <Trash2 size={14} />
+                  <span className="text-[10px] font-bold uppercase tracking-tighter hidden group-hover:inline">Clear All</span>
+                </button>
+              ) : undefined
+            }
+            fallback={
+              <div className="flex flex-col items-center justify-center text-zinc-500 py-20 gap-4">
+                <Ghost size={48} className="stroke-zinc-800 transition-all duration-700 hover:rotate-12 hover:scale-110" />
+                <div className="text-center">
+                  <p className="font-bold text-lg text-zinc-300">
+                    {activeTab === 'active'
+                      ? "The void is quiet."
+                      : "Nothing finished today."}
+                  </p>
+                  <p className="text-sm text-zinc-600">
+                    {activeTab === 'active'
+                      ? "Add a task and get started."
+                      : "Go crush some tasks!"}
+                  </p>
                 </div>
-              }
-            />
-          </div>
+              </div>
+            }
+          />
         </div>
       </main>
 
@@ -483,7 +469,7 @@ export default function App() {
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-black text-zinc-600">
             MADE WITH <Heart size={10} className="text-red-500 fill-red-500 animate-pulse" /> AND FULL MOTIVATION
           </div>
-          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.0 // NO LIMITS // ZEN FLOW</p>
+          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.1 // NO LIMITS // ZEN FLOW</p>
         </div>
       </footer>
     </div>

@@ -13,7 +13,7 @@ export function ActivityHeatmap({ activity }: ActivityHeatmapProps) {
     const maxVal = Math.max(...Object.values(activity), 1);
 
     return (
-        <div className="bg-bg-card border border-zinc-800 rounded-2xl p-4 mb-6">
+        <div className="bg-bg-card border border-zinc-800 rounded-md p-4 mb-6">
             <h3 className="text-[10px] text-text-secondary uppercase tracking-widest font-bold mb-4">Last 7 Days Activity</h3>
             <div className="flex items-end justify-between h-16 gap-2">
                 {days.map(day => {

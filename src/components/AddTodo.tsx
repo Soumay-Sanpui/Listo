@@ -45,10 +45,10 @@ export function AddTodo({ onAdd }: AddTodoProps) {
     };
 
     return (
-        <div className="mb-10">
+        <div>
             <form
                 onSubmit={handleSubmit}
-                className="flex items-center bg-bg-card border border-zinc-800 rounded-3xl p-3 px-4 transition-all shadow-sm focus-within:border-accent-color focus-within:ring-2 focus-within:ring-accent-color/30"
+                className="flex items-center bg-bg-card border border-zinc-800 rounded-full p-3 px-4 transition-all shadow-sm focus-within:border-accent-color focus-within:ring-2 focus-within:ring-accent-color/30"
             >
                 <input
                     type="text"
@@ -73,7 +73,7 @@ export function AddTodo({ onAdd }: AddTodoProps) {
                     {tags.map(tag => (
                         <span
                             key={tag}
-                            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border font-bold tracking-wide transition-all ${getTagStyles(tag)}`}
+                            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md border font-bold tracking-wide transition-all ${getTagStyles(tag)}`}
                         >
                             #{tag}
                             <button

@@ -22,7 +22,7 @@ export function AboutListoModal({ isOpen, onClose }: AboutListoModalProps) {
                 <div className="p-8 space-y-6 text-center">
                     {!showRealMeaning ? (
                         <>
-                            <div className="w-16 h-16 rounded-2xl bg-amber-400/10 text-amber-500 flex items-center justify-center mx-auto">
+                            <div className="w-16 h-16 rounded-md bg-amber-400/10 text-amber-500 flex items-center justify-center mx-auto">
                                 <Ghost size={32} />
                             </div>
 
@@ -38,14 +38,14 @@ export function AboutListoModal({ isOpen, onClose }: AboutListoModalProps) {
                             <div className="flex flex-col gap-3 pt-4">
                                 <button
                                     onClick={() => setShowRealMeaning(true)}
-                                    className="cursor-pointer w-full py-4 bg-zinc-900 border border-zinc-800 hover:border-zinc-600 text-zinc-300 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 group"
+                                    className="cursor-pointer w-full py-4 bg-zinc-900 border border-zinc-800 hover:border-zinc-600 text-zinc-300 rounded-md font-semibold transition-all flex items-center justify-center gap-2 group"
                                 >
                                     I still want to know
                                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                 </button>
                                 <button
                                     onClick={handleClose}
-                                    className="cursor-pointer w-full py-4 bg-accent-color text-black rounded-2xl font-semibold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-accent-color/20"
+                                    className="cursor-pointer w-full py-4 bg-accent-color text-black rounded-md font-semibold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-accent-color/20"
                                 >
                                     OK, I AM WORKING
                                 </button>
@@ -53,14 +53,14 @@ export function AboutListoModal({ isOpen, onClose }: AboutListoModalProps) {
                         </>
                     ) : (
                         <>
-                            <div className="w-16 h-16 rounded-2xl bg-success-color/10 text-success-color flex items-center justify-center mx-auto">
+                            <div className="w-16 h-16 rounded-md bg-success-color/10 text-success-color flex items-center justify-center mx-auto">
                                 <BookOpen size={32} />
                             </div>
 
                             <div className="space-y-6 text-left">
                                 <div className="space-y-2">
                                     <h2 className="text-2xl font-semibold text-white tracking-tight">Fine, here's the truth.</h2>
-                                    <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 space-y-4">
+                                    <div className="bg-zinc-900/50 p-6 rounded-md border border-zinc-800 space-y-4">
                                         <p className="text-zinc-300 leading-relaxed">
                                             <span className="text-accent-color font-bold italic">Listo</span> is a Spanish word meaning <br />
                                             <span className="text-white font-semibold text-lg underline decoration-accent-color">ready, done, or all set.</span>
@@ -97,7 +97,7 @@ export function AboutListoModal({ isOpen, onClose }: AboutListoModalProps) {
 
                             <button
                                 onClick={handleClose}
-                                className="cursor-pointer w-full py-4 bg-white text-black rounded-2xl font-semibold transition-all hover:scale-[1.02] active:scale-95 mt-6"
+                                className="cursor-pointer w-full py-4 bg-white text-black rounded-md font-semibold transition-all hover:scale-[1.02] active:scale-95 mt-6"
                             >
                                 GOT IT, BACK TO THE GRIND
                             </button>
