@@ -1,11 +1,59 @@
 import { useState, useEffect } from 'react';
-import type { Todo } from '../types/todo';
+import type { Todo, Board } from '../types/todo';
 
 const STORAGE_KEY = 'listo_todos';
-
 const ACTIVITY_KEY = 'listo_activity';
+const BOARDS_KEY = 'listo_boards';
 
 export function useTodos() {
+    const [boards, setBoards] = useState<Board[]>(() => {
+        try {
+            const stored = localStorage.getItem(BOARDS_KEY);
+            if (stored) {
+                const parsedBoards = JSON.parse(stored);
+                if (!parsedBoards.some((b: Board) => b.type === 'overtime')) {
+                    parsedBoards.push({
+                        id: 'overtime',
+                        title: 'Overtime',
+                        createdAt: Date.now(),
+                        type: 'overtime'
+                    });
+                }
+                return parsedBoards;
+            }
+
+            return [
+                {
+                    id: 'default',
+                    title: 'My Day',
+                    createdAt: Date.now(),
+                    type: 'default'
+                },
+                {
+                    id: 'overtime',
+                    title: 'Overtime',
+                    createdAt: Date.now(),
+                    type: 'overtime'
+                }
+            ];
+        } catch {
+            return [
+                {
+                    id: 'default',
+                    title: 'My Day',
+                    createdAt: Date.now(),
+                    type: 'default'
+                },
+                {
+                    id: 'overtime',
+                    title: 'Overtime',
+                    createdAt: Date.now(),
+                    type: 'overtime'
+                }
+            ];
+        }
+    });
+
     const [todos, setTodos] = useState<Todo[]>(() => {
         try {
             const stored = localStorage.getItem(STORAGE_KEY);
@@ -13,7 +61,12 @@ export function useTodos() {
 
             const parsed = JSON.parse(stored);
             const now = Date.now();
-            return parsed.filter((todo: Todo) => todo.validUntil > now);
+            return parsed
+                .filter((todo: any) => todo.validUntil > now)
+                .map((todo: any) => ({
+                    ...todo,
+                    boardId: todo.boardId || 'default'
+                }));
         } catch (e) {
             console.error("Failed to parse todos", e);
             return [];
@@ -39,6 +92,10 @@ export function useTodos() {
     }, [activity]);
 
     useEffect(() => {
+        localStorage.setItem(BOARDS_KEY, JSON.stringify(boards));
+    }, [boards]);
+
+    useEffect(() => {
         const interval = setInterval(() => {
             const now = Date.now();
             setTodos(prev => {
@@ -50,9 +107,21 @@ export function useTodos() {
         return () => clearInterval(interval);
     }, []);
 
-    const addTodo = (text: string) => {
-        const endOfToday = new Date();
-        endOfToday.setHours(23, 59, 59, 999);
+    const addTodo = (text: string, boardId: string) => {
+        const currentBoard = boards.find(b => b.id === boardId);
+        const isOvertime = currentBoard?.type === 'overtime';
+
+        let validUntil;
+        if (isOvertime) {
+            // Valid for 100 years
+            const futureDate = new Date();
+            futureDate.setFullYear(futureDate.getFullYear() + 100);
+            validUntil = futureDate.getTime();
+        } else {
+            const endOfToday = new Date();
+            endOfToday.setHours(23, 59, 59, 999);
+            validUntil = endOfToday.getTime();
+        }
 
         const tagRegex = /#(\w+)/g;
         const tags = Array.from(text.matchAll(tagRegex)).map(match => match[1]);
@@ -65,10 +134,40 @@ export function useTodos() {
             priority: 'normal',
             tags: tags,
             createdAt: Date.now(),
-            validUntil: endOfToday.getTime(),
-            isExtended: false
+            validUntil: validUntil,
+            isExtended: false,
+            boardId: boardId
         };
         setTodos(prev => [newTodo, ...prev]);
+    };
+
+    const addBoard = (title: string) => {
+        if (boards.length >= 6) return; // Limit to 6 including Overtime
+        const newBoard: Board = {
+            id: crypto.randomUUID(),
+            title,
+            createdAt: Date.now(),
+            type: 'default'
+        };
+        setBoards(prev => [...prev, newBoard]);
+    };
+
+    const deleteBoard = (id: string) => {
+        // Prevent deleting the last board or the Overtime board if you want to enforce it always being there.
+        // For now preventing delete if it's the only board.
+        if (boards.length <= 1) return;
+
+        const boardToDelete = boards.find(b => b.id === id);
+        if (boardToDelete?.type === 'overtime') {
+            return;
+        }
+
+        setBoards(prev => prev.filter(b => b.id !== id));
+        setTodos(prev => prev.filter(t => t.boardId !== id));
+    };
+
+    const updateBoardName = (id: string, newTitle: string) => {
+        setBoards(prev => prev.map(b => b.id === id ? { ...b, title: newTitle } : b));
     };
 
     const toggleTodo = (id: string) => {
@@ -97,10 +196,18 @@ export function useTodos() {
         setTodos(prev => prev.map(todo => {
             if (todo.id !== id) return todo;
             const willExtend = !todo.isExtended;
-            const deadline = new Date();
-            if (willExtend) deadline.setDate(deadline.getDate() + 1);
-            deadline.setHours(23, 59, 59, 999);
-            return { ...todo, isExtended: willExtend, validUntil: deadline.getTime() };
+
+            // If already on overtime board or huge validity, maybe don't need extension logic?
+            // But let's keep it just in case logic changes or they move it.
+            // Actually, extending an infinite task doesn't make sense, but for now let's just leave logic as is.
+            // If it's a normal task:
+            if (todo.validUntil < Date.now() + 86400000 * 30) { // arbitrary 'not infinite' check
+                const deadline = new Date();
+                if (willExtend) deadline.setDate(deadline.getDate() + 1);
+                deadline.setHours(23, 59, 59, 999);
+                return { ...todo, isExtended: willExtend, validUntil: deadline.getTime() };
+            }
+            return { ...todo, isExtended: willExtend }; // Don't change validUntil if it's already 'forever'
         }));
     };
 
@@ -119,7 +226,7 @@ export function useTodos() {
     };
 
     const exportData = () => {
-        const data = JSON.stringify({ todos, activity }, null, 2);
+        const data = JSON.stringify({ todos, activity, boards }, null, 2);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -135,6 +242,7 @@ export function useTodos() {
                 const parsed = JSON.parse(e.target?.result as string);
                 if (parsed.todos) setTodos(parsed.todos);
                 if (parsed.activity) setActivity(parsed.activity);
+                if (parsed.boards) setBoards(parsed.boards);
                 alert("Backup restored successfully!");
             } catch (err) {
                 alert("Invalid backup file.");
@@ -145,9 +253,13 @@ export function useTodos() {
 
     return {
         todos,
+        boards,
         activity,
         setTodos,
         addTodo,
+        addBoard,
+        deleteBoard,
+        updateBoardName,
         toggleTodo,
         deleteTodo,
         toggleExtension,

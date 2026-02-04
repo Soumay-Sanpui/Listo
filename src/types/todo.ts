@@ -7,4 +7,12 @@ export interface Todo {
     createdAt: number;
     validUntil: number; // Timestamp for expiration
     isExtended: boolean; // Tracking if it was extended to tomorrow
+    boardId: string;
+}
+
+export interface Board {
+    id: string;
+    title: string;
+    createdAt: number;
+    type?: 'default' | 'overtime';
 }
