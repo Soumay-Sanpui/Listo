@@ -1,4 +1,4 @@
-import { X, Flame, Target, CalendarArrowUp, Tag, Volume2, Info, Zap } from 'lucide-react';
+import { X, Flame, Target, CalendarArrowUp, Tag, Info, Zap } from 'lucide-react';
 
 interface HelpModalProps {
     isOpen: boolean;
@@ -52,9 +52,31 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
 
                     <section className="space-y-4">
                         <h3 className="text-xs font-bold text-text-secondary uppercase tracking-widest flex items-center gap-2">
-                            <Tag size={14} className="text-violet-400" /> Smart Organization
+                            <Tag size={14} className="text-violet-400" /> Organization & Boards
                         </h3>
                         <div className="grid gap-4">
+                            <div className="flex gap-4">
+                                <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><line x1="3" x2="21" y1="9" y2="9" /><line x1="9" x2="9" y1="21" y2="9" /></svg>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-semibold text-text-primary">Multiple Boards</p>
+                                    <p className="text-xs text-text-secondary leading-relaxed">
+                                        Create up to 5 custom boards to separate Work, Life, and Chaos. Switch between them instantly.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex gap-4">
+                                <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-semibold text-text-primary">Overtime Board</p>
+                                    <p className="text-xs text-text-secondary leading-relaxed">
+                                        A special board where <span className="text-amber-500 font-bold">tasks never expire</span>. Use this for long-term goals or things you'll definitely do "someday".
+                                    </p>
+                                </div>
+                            </div>
                             <div className="flex gap-4">
                                 <div className="w-8 h-8 rounded-lg bg-violet-400/10 text-violet-400 flex items-center justify-center shrink-0">
                                     <Tag size={18} />
@@ -64,32 +86,6 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                                     <p className="text-xs text-text-secondary leading-relaxed">
                                         Type a <code className="bg-zinc-800 px-1 rounded text-accent-color font-bold">#tag</code> followed by a space. Listo will automatically "swallow" it and colorize it.
                                     </p>
-                                    <div className="flex flex-wrap gap-1.5 pt-2">
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-cyan-400/10 text-cyan-400 border border-cyan-400/20 font-bold">#work</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-violet-400/10 text-violet-400 border border-violet-400/20 font-bold">#study</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-rose-400/10 text-rose-400 border border-rose-400/20 font-bold">#urgent</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 font-bold">#home</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-400/10 text-amber-400 border border-amber-400/20 font-bold">#personal</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-sky-400/10 text-sky-400 border border-sky-400/20 font-bold">#idea</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-orange-400/10 text-orange-400 border border-orange-400/20 font-bold">#gym</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-lime-400/10 text-lime-400 border border-lime-400/20 font-bold">#health</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-fuchsia-400/10 text-fuchsia-400 border border-fuchsia-400/20 font-bold">#shopping</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-indigo-400/10 text-indigo-400 border border-indigo-400/20 font-bold">#meet</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-400/10 text-blue-400 border border-blue-400/20 font-bold">#call</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 font-bold">#mail</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-pink-400/10 text-pink-400 border border-pink-400/20 font-bold">#ux</span>
-                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-red-400/10 text-red-400 border border-red-400/20 font-bold">#bug</span>
-                                    </div>
-                                    <p className="text-[10px] text-zinc-500 italic">...and any other tag will use a default sleek gray.</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="w-8 h-8 rounded-lg bg-success-color/10 text-success-color flex items-center justify-center shrink-0">
-                                    <Volume2 size={18} />
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-sm font-semibold text-text-primary">Data Portability</p>
-                                    <p className="text-xs text-text-secondary leading-relaxed">Use the <span className="text-success-color font-bold">Download</span> and <span className="text-cyan-400 font-bold">Upload</span> icons in the header to backup your todos and activity to a JSON file.</p>
                                 </div>
                             </div>
                         </div>
@@ -119,7 +115,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                         <div className="grid gap-4">
                             <div className="flex gap-4 border-l-2 border-accent-color/20 pl-4 py-2 bg-accent-color/5 rounded-r-xl text-accent-color">
                                 <p className="text-xs leading-relaxed italic">
-                                    "Listo is built on the philosophy of 'Now or Never'. All tasks vanish at midnight unless you explicitly 'keep' them."
+                                    "The 5-task limit is gone. You are now free to overload yourself. Regular tasks still vanish at midnight, unless they are in Overtime."
                                 </p>
                             </div>
                             <div className="flex gap-4">
