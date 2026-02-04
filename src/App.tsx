@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTodos } from './hooks/useTodos';
 import { AddTodo } from './components/AddTodo';
 import { TodoList } from './components/TodoList';
@@ -9,7 +9,9 @@ import { AnalyticsModal } from './components/AnalyticsModal';
 import { DailyProgressModal } from './components/DailyProgressModal';
 import { ThemeModal } from './components/ThemeModal';
 import { AboutListoModal } from './components/AboutListoModal';
-import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette, AlertCircle, Github } from 'lucide-react';
+import { AddBoardModal } from './components/AddBoardModal';
+import { SettingsModal } from './components/SettingsModal';
+import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, Palette, AlertCircle, Github, Layout, Plus, X } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import type { Todo } from './types/todo';
@@ -37,29 +39,33 @@ const QUOTES: string[] = [
   "Productivity is never an accident."
 ];
 
-const LIMIT_MESSAGES = [
-  "Six tasks? Slow down, Superman. They're all vanishing at midnight anyway. Why waste the ink? 🦸‍♂️",
-  "Adding a 6th task is bold for someone who won't even finish the first 5 before the clock hits 12. 🕛",
-  "Five is the limit. Remember, everything you don't finish tonight gets deleted. Don't be a hoarder. 🗑️",
-  "A 6th task? In this economy? Stick to the 5 you'll lose in a few hours.",
-  "If you can't finish 5 before midnight, adding a 6th is just digital littering.",
-  "Your ambition is adorable, but the 'Now or Never' clock is ticking. 5 is plenty.",
-  "Focus on the 5 you have. At midnight, this list becomes a ghost town."
+const BOARD_LIMIT_MESSAGES = [
+  "Five boards is the limit! Finish what you have first. 🛑",
+  "You can't handle more than 5 boards. Trust me. 😤",
+  "Five boards. That's it. Don't get greedy. 🐷",
+  "Focus on your 5 boards. Multitasking is a myth. 🧠",
+  "Adding a 6th board? In this economy? No. 📉"
 ];
 
 export default function App() {
   const {
     todos,
+    boards,
     activity,
+    settings,
     setTodos,
     addTodo,
+    addBoard,
+    deleteBoard,
     toggleTodo,
     deleteTodo,
     toggleExtension,
     togglePriority,
     getSortedTodos,
+    updateSettings,
     exportData,
-    importData
+    importData,
+    clearAllData
   } = useTodos();
 
   const [focusedTodo, setFocusedTodo] = useState<Todo | null>(null);
@@ -69,39 +75,73 @@ export default function App() {
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
   const [limitMessage, setLimitMessage] = useState("");
+  const [isAddBoardOpen, setIsAddBoardOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'active' | 'completed'>('active');
+  const [activeBoardId, setActiveBoardId] = useState<string>('default');
   const { width, height } = useWindowSize();
 
   const quote = useMemo(() => QUOTES[new Date().getDay() % QUOTES.length], []);
 
-  const activeTodos = getSortedTodos(todos.filter(t => !t.completed));
-  const completedTodos = getSortedTodos(todos.filter(t => t.completed));
+  // Ensure activeBoardId matches an existing board
+  useEffect(() => {
+    if (boards.length > 0 && !boards.find(b => b.id === activeBoardId)) {
+      // If current board was deleted or invalid, fallback to first board (often 'My Day')
+      if (boards[0]) setActiveBoardId(boards[0].id);
+    }
+  }, [boards, activeBoardId]);
 
-  const totalToday = todos.length;
-  const completedCount = todos.filter(t => t.completed).length;
+  const currentBoardTodos = todos.filter(t => t.boardId === activeBoardId);
+  const activeTodos = getSortedTodos(currentBoardTodos.filter(t => !t.completed));
+  const completedTodos = getSortedTodos(currentBoardTodos.filter(t => t.completed));
+
+  const totalToday = currentBoardTodos.length;
+  const completedCount = currentBoardTodos.filter(t => t.completed).length;
   const percentage = totalToday === 0 ? 0 : Math.round((completedCount / totalToday) * 100);
 
   const handleAddTodo = (text: string) => {
-    if (activeTodos.length >= 5) {
-      setLimitMessage(LIMIT_MESSAGES[Math.floor(Math.random() * LIMIT_MESSAGES.length)]);
+    addTodo(text, activeBoardId);
+  };
+
+  const handleAddBoardClick = () => {
+    // Limit is 6: 5 user-created + 1 overtime
+    if (boards.length >= 6) {
+      setLimitMessage(BOARD_LIMIT_MESSAGES[Math.floor(Math.random() * BOARD_LIMIT_MESSAGES.length)]);
       setIsLimitModalOpen(true);
       return;
     }
-    addTodo(text);
+    setIsAddBoardOpen(true);
+  };
+
+  const handleDeleteBoard = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (boards.length <= 1) {
+      alert("You must have at least one board.");
+      return;
+    }
+    // Double check here although UI hides it
+    const board = boards.find(b => b.id === id);
+    if (board?.type === 'overtime') return;
+
+    if (confirm("Delete this board and all its tasks?")) {
+      deleteBoard(id);
+    }
   };
 
   const handleComplete = (id: string) => {
     toggleTodo(id);
-    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-    audio.volume = 0.5;
-    audio.play().catch(() => { });
+    if (settings.soundEnabled) {
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(() => { });
+    }
   };
 
   const handleToggleWithSound = (id: string) => {
     const todo = todos.find(t => t.id === id);
-    if (todo && !todo.completed) {
+    if (todo && !todo.completed && settings.soundEnabled) {
       const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
       audio.volume = 0.5;
       audio.play().catch(() => { });
@@ -110,8 +150,10 @@ export default function App() {
   };
 
   const clearCompleted = () => {
-    if (confirm("Clear all completed tasks?")) {
-      setTodos(todos.filter(t => !t.completed));
+    if (confirm("Clear all completed tasks in this board?")) {
+      // Only remove completed tasks for current board
+      const todosToKeep = todos.filter(t => !(t.completed && t.boardId === activeBoardId));
+      setTodos(todosToKeep);
     }
   };
 
@@ -122,7 +164,7 @@ export default function App() {
 
   return (
     <div className="w-full relative min-h-screen flex flex-col">
-      {percentage === 100 && totalToday > 0 && (
+      {settings.confettiEnabled && percentage === 100 && totalToday > 0 && (
         <Confetti
           width={width}
           height={height}
@@ -133,7 +175,7 @@ export default function App() {
         />
       )}
 
-      {/* Sarcastic Limit Modal */}
+      {/* Limit Modal */}
       {isLimitModalOpen && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
           <div className="bg-zinc-900 border-2 border-red-500/30 rounded-3xl max-w-sm w-full p-8 shadow-2xl text-center space-y-6 animate-in zoom-in-95 duration-200">
@@ -141,25 +183,34 @@ export default function App() {
               <AlertCircle size={32} />
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-white uppercase tracking-tighter">Slow Down, Champ</h3>
+              <h3 className="text-lg font-semibold text-white uppercase tracking-tighter">Whoa There</h3>
               <p className="text-zinc-400 text-md leading-relaxed font-medium">
                 {limitMessage}
               </p>
-              <div className="pt-2">
-                <p className="text-xs text-red-500 font-semibold uppercase tracking-[0.2em] animate-pulse">
-                  Reminder: All tasks vanish at midnight
-                </p>
-              </div>
             </div>
             <button
               onClick={() => setIsLimitModalOpen(false)}
               className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-2xl hover:bg-zinc-200 transition-all active:scale-95 text-xs shadow-lg shadow-white/10"
             >
-              Okay, will finish the 5 first
+              Okay, I understand
             </button>
           </div>
         </div>
       )}
+
+      <AddBoardModal
+        isOpen={isAddBoardOpen}
+        onClose={() => setIsAddBoardOpen(false)}
+        onAdd={addBoard}
+      />
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        settings={settings}
+        onUpdateSettings={updateSettings}
+        onClearData={clearAllData}
+      />
 
       <FocusMode
         todo={focusedTodo}
@@ -218,7 +269,12 @@ export default function App() {
       <header className="mb-6 px-2">
         <div className="flex justify-between items-start border-b border-zinc-800 pb-4 relative">
           <div className="flex-1">
-            <h1 className="text-3xl font-extrabold bg-gradient-to-br from-white to-zinc-500 bg-clip-text text-transparent tracking-tighter">Listo</h1>
+            <h1
+              onClick={() => setIsSettingsOpen(true)}
+              className="text-3xl font-extrabold bg-gradient-to-br from-white to-zinc-500 bg-clip-text text-transparent tracking-tighter cursor-pointer hover:opacity-80 transition-opacity w-fit select-none"
+            >
+              Listo
+            </h1>
             <p className="text-xs text-text-secondary font-medium uppercase tracking-widest mt-1">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </p>
@@ -282,13 +338,59 @@ export default function App() {
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 text-zinc-500 overflow-hidden whitespace-nowrap">
-          <Sparkles size={14} className="text-amber-500 shrink-0" />
-          <p className="text-xs italic truncate animate-in slide-in-from-left-2 duration-700">{quote}</p>
-        </div>
+        {settings.showQuotes && (
+          <div className="mt-4 flex items-center gap-2 text-zinc-500 overflow-hidden whitespace-nowrap">
+            <Sparkles size={14} className="text-amber-500 shrink-0" />
+            <p className="text-xs italic truncate animate-in slide-in-from-left-2 duration-700">{quote}</p>
+          </div>
+        )}
       </header>
 
-      <main className="flex-1 space-y-12">
+      <main className="flex-1 space-y-8">
+        {/* Boards Section */}
+        <div className="px-4 pb-0 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-2 w-max mx-auto">
+            {boards.map(board => (
+              <div
+                key={board.id}
+                onClick={() => setActiveBoardId(board.id)}
+                className={`group relative px-3 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 ${activeBoardId === board.id
+                    ? 'text-white'
+                    : 'text-zinc-600 hover:text-zinc-400'
+                  }`}
+              >
+                <Layout size={14} className={activeBoardId === board.id ? 'text-zinc-200' : 'text-zinc-700'} />
+                <span className={`text-xs uppercase tracking-wider whitespace-nowrap ${activeBoardId === board.id ? 'font-black' : 'font-bold'}`}>
+                  {board.title}
+                </span>
+
+                {boards.length > 1 && board.type !== 'overtime' && (
+                  <button
+                    onClick={(e) => handleDeleteBoard(e, board.id)}
+                    className={`ml-1 p-1 rounded-full hover:bg-white/10 text-zinc-600 hover:text-red-400 transition-colors ${activeBoardId === board.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                  >
+                    <X size={10} />
+                  </button>
+                )}
+
+                {activeBoardId === board.id && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent-color" />
+                )}
+              </div>
+            ))}
+
+            {boards.length < 6 && (
+              <button
+                onClick={handleAddBoardClick}
+                className="w-8 h-8 rounded-full border border-zinc-800 border-dashed text-zinc-600 hover:text-zinc-300 hover:border-zinc-600 hover:bg-zinc-900/50 transition-all flex items-center justify-center ml-2"
+                title="New Board"
+              >
+                <Plus size={14} />
+              </button>
+            )}
+          </div>
+        </div>
+
         <AddTodo onAdd={handleAddTodo} />
 
         <div className="flex flex-col gap-8">

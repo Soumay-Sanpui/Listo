@@ -4,6 +4,21 @@ import type { Todo, Board } from '../types/todo';
 const STORAGE_KEY = 'listo_todos';
 const ACTIVITY_KEY = 'listo_activity';
 const BOARDS_KEY = 'listo_boards';
+const SETTINGS_KEY = 'listo_settings';
+
+export interface AppSettings {
+    soundEnabled: boolean;
+    confettiEnabled: boolean;
+    confirmDeleteBoard: boolean;
+    showQuotes: boolean;
+}
+
+const DEFAULT_SETTINGS: AppSettings = {
+    soundEnabled: true,
+    confettiEnabled: true,
+    confirmDeleteBoard: true,
+    showQuotes: true
+};
 
 export function useTodos() {
     const [boards, setBoards] = useState<Board[]>(() => {
@@ -83,6 +98,16 @@ export function useTodos() {
         }
     });
 
+    // Settings State
+    const [settings, setSettings] = useState<AppSettings>(() => {
+        try {
+            const stored = localStorage.getItem(SETTINGS_KEY);
+            return stored ? { ...DEFAULT_SETTINGS, ...JSON.parse(stored) } : DEFAULT_SETTINGS;
+        } catch {
+            return DEFAULT_SETTINGS;
+        }
+    });
+
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
     }, [todos]);
@@ -94,6 +119,10 @@ export function useTodos() {
     useEffect(() => {
         localStorage.setItem(BOARDS_KEY, JSON.stringify(boards));
     }, [boards]);
+
+    useEffect(() => {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    }, [settings]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -225,8 +254,12 @@ export function useTodos() {
         });
     };
 
+    const updateSettings = (newSettings: Partial<AppSettings>) => {
+        setSettings(prev => ({ ...prev, ...newSettings }));
+    };
+
     const exportData = () => {
-        const data = JSON.stringify({ todos, activity, boards }, null, 2);
+        const data = JSON.stringify({ todos, activity, boards, settings }, null, 2);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -243,6 +276,7 @@ export function useTodos() {
                 if (parsed.todos) setTodos(parsed.todos);
                 if (parsed.activity) setActivity(parsed.activity);
                 if (parsed.boards) setBoards(parsed.boards);
+                if (parsed.settings) setSettings(parsed.settings);
                 alert("Backup restored successfully!");
             } catch (err) {
                 alert("Invalid backup file.");
@@ -251,10 +285,23 @@ export function useTodos() {
         reader.readAsText(file);
     };
 
+    const clearAllData = () => {
+        setTodos([]);
+        setBoards([
+            { id: 'default', title: 'My Day', createdAt: Date.now(), type: 'default' },
+            { id: 'overtime', title: 'Overtime', createdAt: Date.now(), type: 'overtime' }
+        ]);
+        setActivity({});
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(ACTIVITY_KEY);
+        localStorage.removeItem(BOARDS_KEY);
+    };
+
     return {
         todos,
         boards,
         activity,
+        settings,
         setTodos,
         addTodo,
         addBoard,
@@ -265,7 +312,9 @@ export function useTodos() {
         toggleExtension,
         togglePriority,
         getSortedTodos,
+        updateSettings,
         exportData,
-        importData
+        importData,
+        clearAllData
     };
 }
