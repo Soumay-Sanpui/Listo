@@ -11,13 +11,17 @@ export interface AppSettings {
     confettiEnabled: boolean;
     confirmDeleteBoard: boolean;
     showQuotes: boolean;
+    smartBoardTargeting: boolean;
+    customTags: Record<string, string>;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
     soundEnabled: true,
     confettiEnabled: true,
     confirmDeleteBoard: true,
-    showQuotes: true
+    showQuotes: true,
+    smartBoardTargeting: true,
+    customTags: {}
 };
 
 export function useTodos() {
@@ -136,7 +140,26 @@ export function useTodos() {
         return () => clearInterval(interval);
     }, []);
 
-    const addTodo = (text: string, boardId: string) => {
+    const addTodo = (text: string, initialBoardId: string) => {
+        let boardId = initialBoardId;
+        let finalText = text;
+
+        if (settings.smartBoardTargeting) {
+            const boardMatch = text.match(/@(\w+)/);
+            if (boardMatch) {
+                const targetName = boardMatch[1].toLowerCase();
+                const targetBoard = boards.find(b =>
+                    b.title.toLowerCase() === targetName ||
+                    b.title.toLowerCase().replace(/\s/g, '') === targetName
+                );
+
+                if (targetBoard) {
+                    boardId = targetBoard.id;
+                    finalText = text.replace(boardMatch[0], '').trim();
+                }
+            }
+        }
+
         const currentBoard = boards.find(b => b.id === boardId);
         const isOvertime = currentBoard?.type === 'overtime';
 
@@ -153,12 +176,12 @@ export function useTodos() {
         }
 
         const tagRegex = /#(\w+)/g;
-        const tags = Array.from(text.matchAll(tagRegex)).map(match => match[1]);
-        const cleanText = text.replace(tagRegex, '').trim();
+        const tags = Array.from(finalText.matchAll(tagRegex)).map(match => match[1]);
+        const cleanText = finalText.replace(tagRegex, '').trim();
 
         const newTodo: Todo = {
             id: crypto.randomUUID(),
-            text: cleanText || text,
+            text: cleanText || finalText,
             completed: false,
             priority: 'normal',
             tags: tags,

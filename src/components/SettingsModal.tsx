@@ -1,5 +1,7 @@
-import { X, Settings, Volume2, Sparkles, Quote, Trash2, Github, Info, Download, Upload, Palette } from 'lucide-react';
+import { X, Settings, Volume2, Sparkles, Quote, Trash2, Github, Info, Download, Upload, Palette, Target, Plus } from 'lucide-react';
 import type { AppSettings } from '../hooks/useTodos';
+import { HexColorPicker } from 'react-colorful';
+import { useState } from 'react';
 
 interface SettingsModalProps {
     isOpen: boolean;
@@ -24,8 +26,32 @@ export function SettingsModal({
 }: SettingsModalProps) {
     if (!isOpen) return null;
 
+    const [newTagName, setNewTagName] = useState('');
+    const [newTagColor, setNewTagColor] = useState('#8b5cf6');
+    const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+
     const handleToggle = (key: keyof AppSettings) => {
         onUpdateSettings({ [key]: !settings[key] });
+    };
+
+    const handleAddTag = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTagName.trim()) return;
+        const normalized = newTagName.toLowerCase().trim();
+        onUpdateSettings({
+            customTags: {
+                ...settings.customTags,
+                [normalized]: newTagColor
+            }
+        });
+        setNewTagName('');
+        setIsColorPickerOpen(false);
+    };
+
+    const handleDeleteTag = (tagName: string) => {
+        const newTags = { ...settings.customTags };
+        delete newTags[tagName];
+        onUpdateSettings({ customTags: newTags });
     };
 
     const handleClearData = () => {
@@ -123,7 +149,88 @@ export function SettingsModal({
                                     <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${settings.showQuotes ? 'left-7' : 'left-1'}`} />
                                 </div>
                             </button>
+
+                            {/* Smart Board Targeting */}
+                            <button
+                                onClick={() => handleToggle('smartBoardTargeting')}
+                                className="w-full flex items-center justify-between p-4 rounded-md bg-zinc-900 hover:bg-zinc-800/50 border border-zinc-800 transition-all group"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-2 rounded-md transition-colors ${settings.smartBoardTargeting ? 'bg-indigo-500/10 text-indigo-500' : 'bg-zinc-800 text-zinc-500'}`}>
+                                        <Target size={18} />
+                                    </div>
+                                    <div className="text-left">
+                                        <p className={`text-sm font-semibold transition-colors ${settings.smartBoardTargeting ? 'text-white' : 'text-zinc-500'}`}>Smart Targeting</p>
+                                        <p className="text-xs text-zinc-500">Use @boardname to route tasks</p>
+                                    </div>
+                                </div>
+                                <div className={`w-12 h-6 rounded-full relative transition-colors ${settings.smartBoardTargeting ? 'bg-indigo-500' : 'bg-zinc-700'}`}>
+                                    <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${settings.smartBoardTargeting ? 'left-7' : 'left-1'}`} />
+                                </div>
+                            </button>
                         </div>
+                    </div>
+
+                    {/* Custom Tags */}
+                    <div className="space-y-4">
+                        <h3 className="text-xs font-bold text-zinc-600 uppercase tracking-widest px-1">Custom Tags</h3>
+
+                        <div className="flex flex-wrap gap-2">
+                            {settings.customTags && Object.entries(settings.customTags).map(([tag, color]) => (
+                                <span
+                                    key={tag}
+                                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md border font-bold tracking-wide transition-colors"
+                                    style={{
+                                        color: color,
+                                        backgroundColor: `${color}20`,
+                                        borderColor: `${color}40`
+                                    }}
+                                >
+                                    #{tag}
+                                    <button
+                                        onClick={() => handleDeleteTag(tag)}
+                                        className="hover:text-white transition-colors"
+                                    >
+                                        <X size={12} strokeWidth={3} />
+                                    </button>
+                                </span>
+                            ))}
+                        </div>
+
+                        <form onSubmit={handleAddTag} className="flex gap-2 relative">
+                            <input
+                                type="text"
+                                value={newTagName}
+                                onChange={(e) => setNewTagName(e.target.value)}
+                                placeholder="New tag name..."
+                                className="flex-1 bg-zinc-900 border border-zinc-800 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-700"
+                            />
+
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsColorPickerOpen(!isColorPickerOpen)}
+                                    className="w-10 h-full rounded-md border border-zinc-800"
+                                    style={{ backgroundColor: newTagColor }}
+                                />
+                                {isColorPickerOpen && (
+                                    <div className="absolute bottom-full right-0 mb-2 z-50">
+                                        <div className="fixed inset-0 z-40" onClick={() => setIsColorPickerOpen(false)} />
+                                        <div className="relative z-50 p-2 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl">
+                                            <HexColorPicker color={newTagColor} onChange={setNewTagColor} />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={!newTagName.trim()}
+                                className="p-2 bg-white text-black rounded-md hover:bg-zinc-200 disabled:opacity-50 disabled:hover:bg-white transition-colors"
+                            >
+                                <Plus size={20} />
+                            </button>
+                        </form>
                     </div>
 
                     {/* Data & Look Group */}
@@ -194,7 +301,7 @@ export function SettingsModal({
                     <div className="pt-6 border-t border-zinc-800 text-center space-y-4">
                         <div className="flex items-center justify-center gap-2 text-zinc-600">
                             <Info size={14} />
-                            <span className="text-xs font-mono">v2.1.0 (Limitless Build)</span>
+                            <span className="text-xs font-mono">v2.2.0 (Limitless Build)</span>
                         </div>
                         <a
                             href="https://github.com/Soumay-Sanpui/Listo"

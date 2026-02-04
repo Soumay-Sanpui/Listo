@@ -88,6 +88,17 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                                     </p>
                                 </div>
                             </div>
+                            <div className="flex gap-4">
+                                <div className="w-8 h-8 rounded-md bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
+                                    <Target size={18} />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-semibold text-text-primary">Smart Targeting</p>
+                                    <p className="text-xs text-text-secondary leading-relaxed">
+                                        Use <code className="bg-zinc-800 px-1 rounded text-indigo-400 font-bold">@boardname</code> to route a task to a specific board instantly. The tag is swallowed automatically.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </section>
 

@@ -11,6 +11,7 @@ interface TodoListProps {
     onEnterFocus: (todo: Todo) => void;
     headerActions?: React.ReactNode;
     fallback?: React.ReactNode;
+    customTags?: Record<string, string>;
 }
 
 export function TodoList({
@@ -22,7 +23,8 @@ export function TodoList({
     onTogglePriority,
     onEnterFocus,
     headerActions,
-    fallback
+    fallback,
+    customTags
 }: TodoListProps) {
     return (
         <section className="flex flex-col">
@@ -48,6 +50,7 @@ export function TodoList({
                             onExtend={onExtend}
                             onTogglePriority={onTogglePriority}
                             onEnterFocus={onEnterFocus}
+                            customTags={customTags}
                         />
                     ))
                 )}

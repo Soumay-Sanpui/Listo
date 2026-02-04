@@ -10,9 +10,10 @@ interface TodoItemProps {
     onExtend: (id: string) => void;
     onTogglePriority: (id: string) => void;
     onEnterFocus: (todo: Todo) => void;
+    customTags?: Record<string, string>;
 }
 
-export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority, onEnterFocus }: TodoItemProps) {
+export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority, onEnterFocus, customTags }: TodoItemProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -52,14 +53,18 @@ export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority,
                     </span>
                     {todo.tags && todo.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mt-0.5">
-                            {todo.tags.map(tag => (
-                                <span
-                                    key={tag}
-                                    className={`text-[9px] px-1.5 py-0.5 rounded border font-bold tracking-wide transition-colors ${getTagStyles(tag)}`}
-                                >
-                                    #{tag}
-                                </span>
-                            ))}
+                            {todo.tags.map(tag => {
+                                const styles = getTagStyles(tag, customTags);
+                                return (
+                                    <span
+                                        key={tag}
+                                        className={`text-[9px] px-1.5 py-0.5 rounded font-bold tracking-wide transition-colors ${styles.className}`}
+                                        style={styles.style}
+                                    >
+                                        #{tag}
+                                    </span>
+                                );
+                            })}
                         </div>
                     )}
                 </div>

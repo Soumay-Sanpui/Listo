@@ -11,7 +11,8 @@ import { ThemeModal } from './components/ThemeModal';
 import { AboutListoModal } from './components/AboutListoModal';
 import { AddBoardModal } from './components/AddBoardModal';
 import { SettingsModal } from './components/SettingsModal';
-import { Ghost, HelpCircle, Sparkles, Trash2, Clock, BarChart3, Heart, Zap, AlertCircle, Github, Layout, Plus, X } from 'lucide-react';
+import { CalendarModal } from './components/CalendarModal';
+import { Ghost, HelpCircle, Trash2, Clock, BarChart3, Heart, Zap, AlertCircle, Github, Layout, Plus, X } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import type { Todo } from './types/todo';
@@ -76,6 +77,7 @@ export default function App() {
   const [isThemeOpen, setIsThemeOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
   const [limitMessage, setLimitMessage] = useState("");
   const [isAddBoardOpen, setIsAddBoardOpen] = useState(false);
@@ -254,6 +256,11 @@ export default function App() {
         onClose={() => setIsAboutOpen(false)}
       />
 
+      <CalendarModal
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+      />
+
       <a
         href="https://github.com/Soumay-Sanpui/Listo"
         target="_blank"
@@ -278,7 +285,10 @@ export default function App() {
             >
               Listo
             </h1>
-            <p className="text-xs text-text-secondary font-medium uppercase tracking-widest mt-1">
+            <p
+              onClick={() => setIsCalendarOpen(true)}
+              className="text-xs text-text-secondary font-medium uppercase tracking-widest mt-1 hover:text-accent-color cursor-pointer transition-colors w-fit select-none"
+            >
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </p>
           </div>
@@ -320,12 +330,7 @@ export default function App() {
               </button>
             </div>
 
-            {settings.showQuotes && (
-              <div className="flex items-center gap-2 text-zinc-500 overflow-hidden whitespace-nowrap justify-end pr-1 transition-all duration-300">
-                <Sparkles size={12} className="text-amber-500 shrink-0" />
-                <p className="text-[10px] italic truncate animate-in slide-in-from-right-2 duration-700 max-w-[200px] sm:max-w-none text-right">{quote}</p>
-              </div>
-            )}
+
           </div>
         </div>
 
@@ -378,7 +383,12 @@ export default function App() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <AddTodo onAdd={handleAddTodo} />
+          <AddTodo
+            onAdd={handleAddTodo}
+            boards={boards}
+            customTags={settings.customTags}
+            placeholder={settings.showQuotes ? quote : undefined}
+          />
 
           <div className="flex items-center p-1 w-fit mx-auto sm:mx-0">
             <button
@@ -411,6 +421,7 @@ export default function App() {
             onExtend={toggleExtension}
             onTogglePriority={togglePriority}
             onEnterFocus={setFocusedTodo}
+            customTags={settings.customTags}
             headerActions={
               activeTab === 'completed' && completedTodos.length > 0 ? (
                 <button
@@ -469,7 +480,7 @@ export default function App() {
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-black text-zinc-600">
             MADE WITH <Heart size={10} className="text-red-500 fill-red-500 animate-pulse" /> AND FULL MOTIVATION
           </div>
-          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.1 // NO LIMITS // ZEN FLOW</p>
+          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.2 // NO LIMITS // ZEN FLOW</p>
         </div>
       </footer>
     </div>
