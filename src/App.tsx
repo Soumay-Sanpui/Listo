@@ -463,8 +463,7 @@ export default function App() {
           </div>
           <p className="text-xs text-zinc-500 max-w-sm mx-auto leading-relaxed font-medium">
             There's nothing for you at the bottom. The work is at the top.
-            Stop looking for easter eggs and <span className="text-red-500/80 font-bold">go finish your tasks</span> or I'll delete your progress myself.
-            (Not actually, but seriously, get back to work.)
+            Stop looking for easter eggs and <span className="text-red-500/80 font-bold">go finish your tasks</span>
           </p>
 
           <button
