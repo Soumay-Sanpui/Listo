@@ -188,18 +188,19 @@ export function useTodos() {
             createdAt: Date.now(),
             validUntil: validUntil,
             isExtended: false,
-            boardId: boardId
+            boardId: boardId,
+            columnId: currentBoard?.type === 'kanban' ? 'todo' : undefined
         };
         setTodos(prev => [newTodo, ...prev]);
     };
 
-    const addBoard = (title: string) => {
+    const addBoard = (title: string, type: 'default' | 'kanban' = 'default') => {
         if (boards.length >= 6) return; // Limit to 6 including Overtime
         const newBoard: Board = {
             id: crypto.randomUUID(),
             title,
             createdAt: Date.now(),
-            type: 'default'
+            type
         };
         setBoards(prev => [...prev, newBoard]);
     };
@@ -269,6 +270,24 @@ export function useTodos() {
         ));
     };
 
+    const moveTodo = (todoId: string, newColumnId: 'todo' | 'in-progress' | 'done') => {
+        setTodos(prev => prev.map(t => {
+            if (t.id !== todoId) return t;
+            const isCompleted = newColumnId === 'done';
+            
+            // Update activity if task is being completed via drag
+            if (isCompleted && !t.completed) {
+                const today = new Date().toISOString().split('T')[0];
+                setActivity(prevAct => ({
+                    ...prevAct,
+                    [today]: (prevAct[today] || 0) + 1
+                }));
+            }
+
+            return { ...t, columnId: newColumnId, completed: isCompleted };
+        }));
+    };
+
     const getSortedTodos = (todoList: Todo[]) => {
         return [...todoList].sort((a, b) => {
             if (a.priority === 'high' && b.priority !== 'high') return -1;
@@ -332,6 +351,7 @@ export function useTodos() {
         updateBoardName,
         toggleTodo,
         deleteTodo,
+        moveTodo,
         toggleExtension,
         togglePriority,
         getSortedTodos,

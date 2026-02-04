@@ -1,22 +1,24 @@
 import { useState } from 'react';
-import { X, Plus, Sparkles } from 'lucide-react';
+import { X, Sparkles, Kanban, List } from 'lucide-react';
 
 interface AddBoardModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onAdd: (title: string) => void;
+    onAdd: (title: string, type: 'default' | 'kanban') => void;
 }
 
 export function AddBoardModal({ isOpen, onClose, onAdd }: AddBoardModalProps) {
     const [title, setTitle] = useState('');
+    const [type, setType] = useState<'default' | 'kanban'>('default');
 
     if (!isOpen) return null;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (title.trim()) {
-            onAdd(title.trim());
+            onAdd(title.trim(), type);
             setTitle('');
+            setType('default');
             onClose();
         }
     };
@@ -33,7 +35,7 @@ export function AddBoardModal({ isOpen, onClose, onAdd }: AddBoardModalProps) {
 
                 <div className="mb-6 flex flex-col items-center text-center gap-3">
                     <div className="w-12 h-12 rounded-md bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center text-indigo-400">
-                        <Plus size={24} />
+                        {type === 'default' ? <List size={24} /> : <Kanban size={24} />}
                     </div>
                     <div>
                         <h2 className="text-xl font-bold text-white tracking-tight">New Board</h2>
@@ -61,10 +63,32 @@ export function AddBoardModal({ isOpen, onClose, onAdd }: AddBoardModalProps) {
                         </div>
                     </div>
 
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest ml-1">Board Type</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            <button
+                                type="button"
+                                onClick={() => setType('default')}
+                                className={`flex items-center justify-center gap-2 p-3 rounded-md border transition-all ${type === 'default' ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'bg-zinc-950/50 border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
+                            >
+                                <List size={16} />
+                                <span className="text-xs font-bold uppercase tracking-wider">List</span>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setType('kanban')}
+                                className={`flex items-center justify-center gap-2 p-3 rounded-md border transition-all ${type === 'kanban' ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'bg-zinc-950/50 border-zinc-800 text-zinc-500 hover:border-zinc-700'}`}
+                            >
+                                <Kanban size={16} />
+                                <span className="text-xs font-bold uppercase tracking-wider">Kanban</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <button
                         type="submit"
                         disabled={!title.trim()}
-                        className="w-full py-3.5 bg-white text-black rounded-md font-bold uppercase tracking-wider text-sm hover:bg-zinc-200 disabled:opacity-50 disabled:hover:bg-white transition-all active:scale-[0.98] shadow-lg shadow-white/5 flex items-center justify-center gap-2"
+                        className="w-full py-3.5 bg-white text-black rounded-md font-bold uppercase tracking-wider text-sm hover:bg-zinc-200 disabled:opacity-50 disabled:hover:bg-white transition-all active:scale-[0.98] shadow-lg shadow-white/5 flex items-center justify-center gap-2 mt-2"
                     >
                         <Sparkles size={16} className={title.trim() ? "text-indigo-600" : "text-zinc-400"} />
                         Create Board

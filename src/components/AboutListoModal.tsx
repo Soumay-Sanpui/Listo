@@ -72,8 +72,11 @@ export function AboutListoModal({ isOpen, onClose }: AboutListoModalProps) {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-cyan-400">New in v2.0</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-cyan-400">New in v2.3</h3>
                                     <ul className="text-sm text-zinc-400 space-y-2 list-disc pl-4">
+                                        <li>
+                                            <span className="text-white font-semibold">Kanban Boards:</span> Visualize your workflow with drag-and-drop columns. Choose between List or Kanban when creating a board.
+                                        </li>
                                         <li>
                                             <span className="text-white font-semibold">Multiple Boards:</span> Create up to 5 boards to organize your chaos.
                                         </li>

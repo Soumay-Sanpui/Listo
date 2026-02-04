@@ -8,11 +8,12 @@ export interface Todo {
     validUntil: number; // Timestamp for expiration
     isExtended: boolean; // Tracking if it was extended to tomorrow
     boardId: string;
+    columnId?: 'todo' | 'in-progress' | 'done';
 }
 
 export interface Board {
     id: string;
     title: string;
     createdAt: number;
-    type?: 'default' | 'overtime';
+    type?: 'default' | 'overtime' | 'kanban';
 }

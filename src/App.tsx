@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useTodos } from './hooks/useTodos';
 import { AddTodo } from './components/AddTodo';
 import { TodoList } from './components/TodoList';
+import { KanbanBoard } from './components/KanbanBoard';
 import { FocusMode } from './components/FocusMode';
 import { HelpModal } from './components/HelpModal';
 import { CountdownModal } from './components/CountdownModal';
@@ -12,7 +13,7 @@ import { AboutListoModal } from './components/AboutListoModal';
 import { AddBoardModal } from './components/AddBoardModal';
 import { SettingsModal } from './components/SettingsModal';
 import { CalendarModal } from './components/CalendarModal';
-import { Ghost, HelpCircle, Trash2, Clock, BarChart3, Heart, Zap, AlertCircle, Github, Layout, Plus, X } from 'lucide-react';
+import { Ghost, HelpCircle, Trash2, Clock, BarChart3, Heart, Zap, AlertCircle, Github, Plus, X, Kanban, Layout } from 'lucide-react';
 import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
 import type { Todo } from './types/todo';
@@ -60,6 +61,7 @@ export default function App() {
     deleteBoard,
     toggleTodo,
     deleteTodo,
+    moveTodo,
     toggleExtension,
     togglePriority,
     getSortedTodos,
@@ -95,6 +97,8 @@ export default function App() {
     }
   }, [boards, activeBoardId]);
 
+  const currentBoard = boards.find(b => b.id === activeBoardId);
+  const isKanbanBoard = currentBoard?.type === 'kanban';
   const currentBoardTodos = todos.filter(t => t.boardId === activeBoardId);
   const activeTodos = getSortedTodos(currentBoardTodos.filter(t => !t.completed));
   const completedTodos = getSortedTodos(currentBoardTodos.filter(t => t.completed));
@@ -341,34 +345,43 @@ export default function App() {
         {/* Boards Section */}
         <div className="px-4 pb-0 overflow-x-auto no-scrollbar">
           <div className="flex items-center gap-2 w-max mx-auto">
-            {boards.map(board => (
-              <div
-                key={board.id}
-                onClick={() => setActiveBoardId(board.id)}
-                className={`group relative px-3 py-2 rounded-md transition-all cursor-pointer flex items-center gap-2 ${activeBoardId === board.id
-                  ? 'text-white'
-                  : 'text-zinc-600 hover:text-zinc-400'
-                  }`}
-              >
-                <Layout size={14} className={activeBoardId === board.id ? 'text-zinc-200' : 'text-zinc-700'} />
-                <span className={`text-xs uppercase tracking-wider whitespace-nowrap ${activeBoardId === board.id ? 'font-black' : 'font-bold'}`}>
-                  {board.title}
-                </span>
+            {boards.map(board => {
+              // Determine icon based on board type
+              const BoardIcon = board.type === 'kanban'
+                ? Kanban
+                : board.type === 'overtime'
+                  ? Clock
+                  : Layout; // Default list boards use Layout icon
 
-                {boards.length > 1 && board.type !== 'overtime' && (
-                  <button
-                    onClick={(e) => handleDeleteBoard(e, board.id)}
-                    className={`ml-1 p-1 rounded-full hover:bg-white/10 text-zinc-600 hover:text-red-400 transition-colors ${activeBoardId === board.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-                  >
-                    <X size={10} />
-                  </button>
-                )}
+              return (
+                <div
+                  key={board.id}
+                  onClick={() => setActiveBoardId(board.id)}
+                  className={`group relative px-3 py-2 rounded-md transition-all cursor-pointer flex items-center gap-2 ${activeBoardId === board.id
+                    ? 'text-white'
+                    : 'text-zinc-600 hover:text-zinc-400'
+                    }`}
+                >
+                  <BoardIcon size={14} className={activeBoardId === board.id ? 'text-zinc-200' : 'text-zinc-700'} />
+                  <span className={`text-xs uppercase tracking-wider whitespace-nowrap ${activeBoardId === board.id ? 'font-black' : 'font-bold'}`}>
+                    {board.title}
+                  </span>
 
-                {activeBoardId === board.id && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent-color" />
-                )}
-              </div>
-            ))}
+                  {boards.length > 1 && board.type !== 'overtime' && (
+                    <button
+                      onClick={(e) => handleDeleteBoard(e, board.id)}
+                      className={`ml-1 p-1 rounded-full hover:bg-white/10 text-zinc-600 hover:text-red-400 transition-colors ${activeBoardId === board.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                    >
+                      <X size={10} />
+                    </button>
+                  )}
+
+                  {activeBoardId === board.id && (
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-accent-color" />
+                  )}
+                </div>
+              );
+            })}
 
             {boards.length < 6 && (
               <button
@@ -390,68 +403,83 @@ export default function App() {
             placeholder={settings.showQuotes ? quote : undefined}
           />
 
-          <div className="flex items-center p-1 w-fit mx-auto sm:mx-0">
-            <button
-              onClick={() => setActiveTab('active')}
-              className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'active' ? 'bg-accent-color text-black shadow-lg shadow-accent-color/20' : 'text-zinc-500 hover:text-white'}`}
-            >
-              Do It Now
-              <span className={`text-[10px] px-2 py-0.5 rounded-md ${activeTab === 'active' ? 'bg-black/10' : 'bg-zinc-800'}`}>
-                {activeTodos.length}
-              </span>
-            </button>
-            <button
-              onClick={() => setActiveTab('completed')}
-              className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'completed' ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-zinc-500 hover:text-white'}`}
-            >
-              Done List
-              <span className={`text-[10px] px-2 py-0.5 rounded-md ${activeTab === 'completed' ? 'bg-black/10' : 'bg-zinc-800'}`}>
-                {completedTodos.length}
-              </span>
-            </button>
-          </div>
+          {!isKanbanBoard && (
+            <div className="flex items-center p-1 w-fit mx-auto sm:mx-0">
+              <button
+                onClick={() => setActiveTab('active')}
+                className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'active' ? 'bg-accent-color text-black shadow-lg shadow-accent-color/20' : 'text-zinc-500 hover:text-white'}`}
+              >
+                Do It Now
+                <span className={`text-[10px] px-2 py-0.5 rounded-md ${activeTab === 'active' ? 'bg-black/10' : 'bg-zinc-800'}`}>
+                  {activeTodos.length}
+                </span>
+              </button>
+              <button
+                onClick={() => setActiveTab('completed')}
+                className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'completed' ? 'bg-white text-black shadow-lg shadow-white/10' : 'text-zinc-500 hover:text-white'}`}
+              >
+                Done List
+                <span className={`text-[10px] px-2 py-0.5 rounded-md ${activeTab === 'completed' ? 'bg-black/10' : 'bg-zinc-800'}`}>
+                  {completedTodos.length}
+                </span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <TodoList
-            title=""
-            todos={activeTab === 'active' ? activeTodos : completedTodos}
-            onToggle={handleToggleWithSound}
-            onDelete={deleteTodo}
-            onExtend={toggleExtension}
-            onTogglePriority={togglePriority}
-            onEnterFocus={setFocusedTodo}
-            customTags={settings.customTags}
-            headerActions={
-              activeTab === 'completed' && completedTodos.length > 0 ? (
-                <button
-                  onClick={clearCompleted}
-                  className="p-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-500 hover:border-red-500/50 transition-all shadow-sm flex items-center gap-2 group px-3"
-                  title="Clear all"
-                >
-                  <Trash2 size={14} />
-                  <span className="text-[10px] font-bold uppercase tracking-tighter hidden group-hover:inline">Clear All</span>
-                </button>
-              ) : undefined
-            }
-            fallback={
-              <div className="flex flex-col items-center justify-center text-zinc-500 py-20 gap-4">
-                <Ghost size={48} className="stroke-zinc-800 transition-all duration-700 hover:rotate-12 hover:scale-110" />
-                <div className="text-center">
-                  <p className="font-bold text-lg text-zinc-300">
-                    {activeTab === 'active'
-                      ? "The void is quiet."
-                      : "Nothing finished today."}
-                  </p>
-                  <p className="text-sm text-zinc-600">
-                    {activeTab === 'active'
-                      ? "Add a task and get started."
-                      : "Go crush some tasks!"}
-                  </p>
+          {isKanbanBoard ? (
+            <KanbanBoard
+              todos={currentBoardTodos}
+              onMoveTodo={moveTodo}
+              onToggle={handleToggleWithSound}
+              onDelete={deleteTodo}
+              onExtend={toggleExtension}
+              onTogglePriority={togglePriority}
+              onEnterFocus={setFocusedTodo}
+              customTags={settings.customTags}
+            />
+          ) : (
+            <TodoList
+              title=""
+              todos={activeTab === 'active' ? activeTodos : completedTodos}
+              onToggle={handleToggleWithSound}
+              onDelete={deleteTodo}
+              onExtend={toggleExtension}
+              onTogglePriority={togglePriority}
+              onEnterFocus={setFocusedTodo}
+              customTags={settings.customTags}
+              headerActions={
+                activeTab === 'completed' && completedTodos.length > 0 ? (
+                  <button
+                    onClick={clearCompleted}
+                    className="p-1.5 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-500 hover:border-red-500/50 transition-all shadow-sm flex items-center gap-2 group px-3"
+                    title="Clear all"
+                  >
+                    <Trash2 size={14} />
+                    <span className="text-[10px] font-bold uppercase tracking-tighter hidden group-hover:inline">Clear All</span>
+                  </button>
+                ) : undefined
+              }
+              fallback={
+                <div className="flex flex-col items-center justify-center text-zinc-500 py-20 gap-4">
+                  <Ghost size={48} className="stroke-zinc-800 transition-all duration-700 hover:rotate-12 hover:scale-110" />
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-zinc-300">
+                      {activeTab === 'active'
+                        ? "The void is quiet."
+                        : "Nothing finished today."}
+                    </p>
+                    <p className="text-sm text-zinc-600">
+                      {activeTab === 'active'
+                        ? "Add a task and get started."
+                        : "Go crush some tasks!"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            }
-          />
+              }
+            />
+          )}
         </div>
       </main>
 
@@ -479,7 +507,7 @@ export default function App() {
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-black text-zinc-600">
             MADE WITH <Heart size={10} className="text-red-500 fill-red-500 animate-pulse" /> AND FULL MOTIVATION
           </div>
-          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.2 // NO LIMITS // ZEN FLOW</p>
+          <p className="text-[9px] text-zinc-700 font-mono tracking-tighter uppercase">v.2.3 // KANBAN BOARDS // ZEN FLOW</p>
         </div>
       </footer>
     </div>
