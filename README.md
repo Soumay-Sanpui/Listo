@@ -10,7 +10,7 @@
   <a href="https://listro-live.netlify.app/">
     <img src="https://img.shields.io/badge/LIVE_DEMO-🚀-accent?style=for-the-badge&labelColor=black&color=06b6d4" alt="Live Demo" />
   </a>
-  <p>Experience the flow at <b><a href="https://listro-live.netlify.app/">listro-live.netlify.app</a></b></p>
+  <p>Experience the flow at <b><a href="https://listo-live.netlify.app/">listo-live.netlify.app</a></b></p>
 </div>
 
 ---
