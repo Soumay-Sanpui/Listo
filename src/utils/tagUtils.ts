@@ -16,7 +16,24 @@ export const TAG_COLORS: Record<string, string> = {
     bug: 'text-red-400 bg-red-400/10 border-red-400/20',
 };
 
-export const getTagStyles = (tag: string) => {
+export const getTagStyles = (tag: string, customTags?: Record<string, string>) => {
     const normalizedTag = tag.toLowerCase().replace('#', '');
-    return TAG_COLORS[normalizedTag] || 'text-zinc-400 bg-zinc-800 border-zinc-700';
+
+    if (customTags && customTags[normalizedTag]) {
+        const color = customTags[normalizedTag];
+        return {
+            className: 'border',
+            style: {
+                color: color,
+                backgroundColor: `${color}20`, // ~12% opacity
+                borderColor: `${color}40`,     // ~25% opacity
+            }
+        };
+    }
+
+    const colorClass = TAG_COLORS[normalizedTag] || 'text-zinc-400 bg-zinc-800 border-zinc-700';
+    return {
+        className: `${colorClass} border`,
+        style: {}
+    };
 };
