@@ -1,4 +1,4 @@
-# 👻 Listo: Focus on Now or Never
+# Listo: Focus on Now or Never
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -31,20 +31,20 @@ In Listo, tomorrow doesn't exist. Every task in your list has an expiration date
 
 ## 🔥 Key Features
 
-### � Multiple Board Types (NEW in v2.4!)
+### Multiple Board Types (NEW in v2.4!)
 Create up to **5 custom boards** with different layouts:
-- **📝 List Boards**: Traditional task lists with the classic Listo experience
-- **📊 Kanban Boards**: Visualize your workflow with drag-and-drop columns (To Do, In Progress, Done)
-- **⏰ Overtime Board**: A special board where tasks never expire—for long-term goals and "someday" items
+- **List Boards**: Traditional task lists with the classic Listo experience
+- **Kanban Boards**: Visualize your workflow with drag-and-drop columns (To Do, In Progress, Done)
+- **Overtime Board**: A special board where tasks never expire—for long-term goals and "someday" items
 
-### 📊 Quick Stats Dashboard (NEW!)
+### Quick Stats Dashboard (NEW!)
 Get instant insights into your productivity:
 - **Completion Rate**: Visual progress tracking
 - **Task Metrics**: Total, active, completed, high priority
 - **Smart Insights**: Overdue alerts, due today reminders, and motivational feedback
 - **Real-time Analytics**: See your productivity at a glance
 
-### ⌨️ Keyboard Shortcuts (NEW!)
+### Keyboard Shortcuts (NEW!)
 Power user shortcuts for lightning-fast productivity:
 - `Ctrl + K` - Quick add task (focus input)
 - `Ctrl + H` - Open help menu
@@ -54,35 +54,35 @@ Power user shortcuts for lightning-fast productivity:
 - `Ctrl + E` - Export data
 - `Esc` - Close any modal
 
-### 📅 Due Dates & Notes (NEW!)
+### Due Dates & Notes (NEW!)
 - **Due Dates**: Set specific deadlines for tasks with visual indicators
 - **Task Notes**: Add detailed descriptions and context to any task
 - **Smart Highlighting**: Overdue tasks in red, due today in amber
 - **Date Formatting**: Shows "Today", "Tomorrow", or formatted dates
 
-### 🧘 Zen Focus Mode
+### Zen Focus Mode
 Enter a terminal-like flow state for your tasks.
 - **Pomodoro Timer**: 25 minutes of uninterrupted work
 - **Escape Proof**: Try to close Focus Mode early, and Listo will guilt-trip you into staying
 - **Sarcasm Included**: If you managed to quit without starting, expect a dismissive comment
 
-### 🏷️ Smart Tagging
+### Smart Tagging
 Listo features "Tag Swallowing". Type a `#tag` followed by a space, and the app will automatically extract it into a beautifully colorized pill. No extra clicks required.
 - **Custom Tag Colors**: Create your own tags with custom colors
 - **Smart Board Targeting**: Use `@boardname` to route tasks to specific boards instantly
 
-### � Priority System
+### Priority System
 - **High Priority Tasks**: Mark urgent tasks with a flame icon—they stay pinned at the top
 - **Visual Indicators**: High priority tasks are highlighted for quick identification
 
-### 📊 Activity Tracking
+### Activity Tracking
 - **7-Day Heatmap**: Track your productivity consistency
 - **Completion Analytics**: See your "Zen Flow" visualize over time
 - **Daily Progress**: Real-time completion percentage with confetti celebration at 100%
 
 ---
 
-## ✨ Design Aesthetics
+## Design Aesthetics
 Built with a **Premium Dark Aesthetic**:
 - **Glassmorphism**: Subtle blurs and semi-transparent layers
 - **Micro-animations**: Smooth transitions for every interaction
@@ -92,27 +92,27 @@ Built with a **Premium Dark Aesthetic**:
 
 ---
 
-## 🎯 Smart Features
+## Smart Features
 
-### 🎨 Customization
+### Customization
 - **Custom Tags**: Create tags with your own colors
 - **Sound Effects**: Toggle completion sounds
 - **Confetti Celebrations**: Celebrate 100% completion
 - **Theme Options**: Dark mode optimized
 
-### 💾 Data Management
+### Data Management
 - **Export/Import**: Backup your data as JSON
 - **LocalStorage**: Zero backend, total privacy
 - **Cross-Device**: Import your data on any device
 
-### 📱 Responsive & Accessible
+### Responsive & Accessible
 - **Mobile-Friendly**: Optimized for all screen sizes
 - **Keyboard Navigation**: Full keyboard support
 - **Fast Performance**: Built with Vite for blazing speed
 
 ---
 
-## 🥚 Easter Eggs & Quirks
+## Easter Eggs & Quirks
 - I have added lot of Quirks in the site do check them out! 
 - Try scrolling to the bottom of the page...
 - Click on the "Listo" header for a surprise

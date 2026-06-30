@@ -1,7 +1,7 @@
-import { Check, Trash2, Flame, CalendarArrowUp, Target, MoreVertical, FileText, Calendar } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
-import type { Todo } from '../types/todo';
-import { getTagStyles } from '../utils/tagUtils';
+import {Calendar, CalendarArrowUp, Check, FileText, Flame, MoreVertical, Target, Trash2} from 'lucide-react';
+import {useEffect, useRef, useState} from 'react';
+import type {Todo} from '../types/todo';
+import {getTagStyles} from '../utils/tagUtils';
 
 interface TodoItemProps {
     todo: Todo;
@@ -62,7 +62,7 @@ export function TodoItem({ todo, onToggle, onDelete, onExtend, onTogglePriority,
                 </button>
 
                 <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                    <span className={`text-sm break-words transition-colors duration-200 ${todo.completed ? 'line-through text-zinc-600' : 'text-text-primary'}`}>
+                    <span className={`capitalize text-sm wrap-break-word transition-colors duration-200 ${todo.completed ? 'line-through text-zinc-600' : 'text-text-primary'}`}>
                         {todo.text}
                     </span>
                     {todo.tags && todo.tags.length > 0 && (
